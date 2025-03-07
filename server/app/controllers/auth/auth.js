@@ -122,9 +122,15 @@ export const verifyEmail = async (req, res) => {
 			verificationTokenExpiresAt: { $gt: Date.now() },
 		});
 
+		console.log(`Email verify Code: ${code}`);
+
+		console.log(req.body);
+
 		if (!user) {
 			return res.status(400).json({ success: false, message: "Invalid or expired verification code" });
 		}
+
+		console.log(`Users: ${user}`);
 
 		user.isVerified = true;
 		user.verificationToken = undefined;
@@ -143,7 +149,7 @@ export const verifyEmail = async (req, res) => {
 		});
 	} catch (error) {
 		console.log("error in verifyEmail ", error);
-		res.status(500).json({ success: false, message: "Server error" });
+		res.status(500).json({ success: false, message: "Server error", error: error});
 	}
 };
 
