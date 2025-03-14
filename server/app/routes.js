@@ -11,6 +11,12 @@ const router = Router();
 router.use("/auth",authRoutes);
 // router.use("/user")
 
+router.use("/meal",mealRoutes);
+
+router.use("/snack",snackRoutes);
+
+router.use("/meditation",meditationRoutes);
+
 
 
 router.get("/",(req,res)=>{
