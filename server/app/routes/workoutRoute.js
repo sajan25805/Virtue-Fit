@@ -17,3 +17,4 @@ router.get("/:id",getWorkoutById);
 router.put("/:id",updateWorkout);
 router.delete("/:id",deleteWorkout)
 
+export { router as workoutRoute };
