@@ -1,4 +1,4 @@
-import Workout from "../models/Workout.js";
+import { Workout } from "../models/Workout.js";
 
 // Create Workout
 export const createWorkout = async (req, res) => {

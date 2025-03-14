@@ -7,9 +7,9 @@ import {
     getSnackById,
     updateSnack,
     deleteSnack
-  } from "../controllers/snackController.js";
+  } from "../controllers/snack.js";
   
-  const router = express.Router();
+  const router = Router();
   
   router.post("/", createSnack);
   router.get("/", getAllSnacks); // Get all snacks

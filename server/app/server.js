@@ -6,6 +6,6 @@ const port = config.port ;
 
 connectDB();
 
-app.listen(8000,()=>{
+app.listen(port,()=>{
     console.log(`Virtue Fit is listening at port: ${port}`)
 });

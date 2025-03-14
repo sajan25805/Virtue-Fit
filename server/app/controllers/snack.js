@@ -1,4 +1,4 @@
-import Snack from "../models/Snack.js";
+import { Snack } from "../models/Snack.js";
 
 // Create Snack
 export const createSnack = async (req, res) => {

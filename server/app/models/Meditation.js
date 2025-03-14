@@ -15,3 +15,4 @@ const meditationSchema = new Schema(  {
   { timestamps: true }
 );
 
+export const Meditation = model("Meditation",meditationSchema);

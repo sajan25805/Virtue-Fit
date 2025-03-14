@@ -1,4 +1,4 @@
-import Meditation from "../models/Meditation.js";
+import { Meditation } from "../models/Meditation.js";
 
 // Create Meditation
 export const createMeditation = async (req, res) => {

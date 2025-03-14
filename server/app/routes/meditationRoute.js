@@ -6,7 +6,7 @@ import {
     getMeditationById,
     updateMeditation,
     deleteMeditation
-  } from "../controllers/meditationController.js";
+  } from "../controllers/meditation.js";
   
   const router = Router();
   

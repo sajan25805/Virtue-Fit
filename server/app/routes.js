@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { authRoutes } from "./routes/authRoute.js";
+import { mealRoute } from "./routes/mealRoute.js";
+import { snackRoute } from "./routes/snackRoute.js";
+import { meditationRoute } from "./routes/meditationRoute.js";
 
 
 
@@ -11,11 +14,11 @@ const router = Router();
 router.use("/auth",authRoutes);
 // router.use("/user")
 
-router.use("/meal",mealRoutes);
+router.use("/meal",mealRoute);
 
-router.use("/snack",snackRoutes);
+router.use("/snack",snackRoute);
 
-router.use("/meditation",meditationRoutes);
+router.use("/meditation",meditationRoute);
 
 
 

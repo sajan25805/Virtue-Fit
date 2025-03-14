@@ -15,6 +15,6 @@ router.get("/", getAllWorkouts); // Get all workouts
 router.get("/trainer/:trainerId", getWorkoutsByTrainer);
 router.get("/:id",getWorkoutById);
 router.put("/:id",updateWorkout);
-router.delete("/:id",deleteWorkout)
+router.delete("/:id",deleteWorkout);
 
 export { router as workoutRoute };
