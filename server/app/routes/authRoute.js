@@ -25,25 +25,6 @@ router.post("/reset-password/:token",resetPassword);
 
 
 
-
-
-
-
-// /**
-//  * GET /api/auth/logout
-//  */
-
-// router.get("/login",)
-
-
-// /**
-//  * GET /api/auth/logout
-//  */
-
-// router.get("/logout",)
-
-
-
 export { router as authRoutes }
 
 

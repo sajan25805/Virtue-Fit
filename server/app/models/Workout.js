@@ -7,6 +7,8 @@ const WorkoutSchema = new mongoose.Schema(
         difficulty: { type: String, enum: ["Easy", "Medium", "Hard"], required: true },
         duration: { type: Number, required: true }, // Duration in minutes
         videoUrl: { type: String },
+        time: {type:Number},
+        aim: { type: String, enum: ["strength", "cardio", "flexibility" ]},
         thumbnail: { type: String },
         steps: { type: [String], required: true },
         isCompleted: { type: Boolean, default: false },
