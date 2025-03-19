@@ -33,7 +33,7 @@ const userSchema = new Schema(
     height: { type: Number, min: 50, max: 250 },
     weight: { type: Number, min: 20, max: 300 },
     fitnessGoal: { type: String, trim: true },
-    experienceLevel: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'], default: 'Beginner' },
+    experienceLevel: { type: String, enum: ['beginner', 'intermediate', 'advanced'], default: 'Beginner' },
     fitnessGoals: {
       type: [String],
       enum: ['Weight Loss', 'Muscle Gain', 'Endurance', 'Flexibility', 'General Fitness'],
