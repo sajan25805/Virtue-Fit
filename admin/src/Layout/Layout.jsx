@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import {Sidebar} from "../components/sidebar"
-
+import { Sidebar } from '../components/Sidebar';
 const Layout = () => {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>

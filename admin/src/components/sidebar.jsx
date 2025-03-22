@@ -60,8 +60,8 @@ export function Sidebar({ activeTab, setActiveTab }) {
   const [isMobile, setIsMobile] = useState(false);
 
   const menuItems = [
-    { id: "home", label: "Home", icon: Home, to: "/home" },
-    { id: "workouts", label: "Workouts", icon: Dumbbell, to: "/workouts" },
+    { id: "home", label: "Overview", icon: Home, to: "/" },
+    { id: "workouts", label: "Workouts", icon: Dumbbell, to: "/workout" },
     { id: "meals", label: "Meals", icon: Utensils, to: "/meals" },
     { id: "meditations", label: "Meditations", icon: Wind, to: "/meditations" },
     { id: "programs", label: "Programs", icon: Layers, to: "/programs" },
