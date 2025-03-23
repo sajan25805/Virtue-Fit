@@ -3,6 +3,7 @@ import { MealManagement } from './pages/MealManagement';
 import { MeditationManagement } from './pages/Meditation';
 import {WorkoutManagement} from "./pages/Workout";
 import { DashboardOverview } from './pages/DashboardOverview';
+import { ProgramManagement } from './pages/Program';
 import Layout from './Layout/Layout';
 
 const App = () => (
@@ -14,6 +15,7 @@ const App = () => (
         <Route path="/workout" element={<WorkoutManagement />} />
         <Route path="/meals" element={<MealManagement />} />
         <Route path="/meditations" element={<MeditationManagement />} />
+        <Route path="/programs" element={<ProgramManagement />} />
     </Route>
     </Routes>
   </Router>
