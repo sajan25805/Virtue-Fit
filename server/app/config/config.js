@@ -17,9 +17,14 @@ dotenv.config();
         endpoint: process.env.MAILTRAP_ENDPOINT,
         token: process.env.MAILTRAP_TOKEN
     },
-    client_url:process.env.CLIENT_URL
-
+    client_url:process.env.CLIENT_URL,
+    cloudinary:{
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+        apiKey: process.env.CLOUDINARY_API_KEY,
+        apiSecret: process.env.CLOUDINARY_API_SECRET,
+    }
 };
 
 
 export default config;
+

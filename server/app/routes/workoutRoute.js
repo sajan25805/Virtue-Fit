@@ -1,20 +1,33 @@
-import { Router } from "express";
-import {
-createWorkout,
-    deleteWorkout,
-getAllWorkouts,
-getWorkoutById,
-getWorkoutsByTrainer,
-updateWorkout,
-} from "../controllers/workout.js"
+import express from 'express';
 
-const router = Router();
+import { createWorkout, getWorkouts, getWorkoutById, updateWorkout, deleteWorkout } from '../controllers/workout.js';
 
-router.post("/", createWorkout);
-router.get("/", getAllWorkouts); // Get all workouts
-router.get("/trainer/:trainerId", getWorkoutsByTrainer);
-router.get("/:id",getWorkoutById);
-router.put("/:id",updateWorkout);
-router.delete("/:id",deleteWorkout);
+import { upload } from '../middleware/multer.js';
+
+const router = express.Router();
+
+
+
+router.post(
+  '/',
+  upload.fields([
+    { name: 'video', maxCount: 1 },
+    { name: 'thumbnail', maxCount: 1 }
+  ]),
+  createWorkout
+);
+router.get('/', getWorkouts);
+router.get('/:id', getWorkoutById);
+router.put(
+  '/:id',
+  upload.fields([
+    { name: 'video', maxCount: 1 },
+    { name: 'thumbnail', maxCount: 1 }
+  ]),
+  updateWorkout
+);
+router.delete('/:id',deleteWorkout);
 
 export { router as workoutRoute };
+
+

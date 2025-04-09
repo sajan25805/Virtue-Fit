@@ -129,12 +129,15 @@ export const verifyEmail = async (req, res) => {
 
 		console.log(`Users: ${user}`);
 
+
 		user.isVerified = true;
 		user.verificationToken = undefined;
 		user.verificationTokenExpiresAt = undefined;
 		await user.save();
 
-		await sendWelcomeEmail(user.email, user.name);
+		const userName = `${user.firstName} ${user.lastName}`
+
+		await sendWelcomeEmail(user.email, userName);
 
 		res.status(200).json({
 			success: true,
@@ -144,7 +147,7 @@ export const verifyEmail = async (req, res) => {
 				password: undefined,
 			},
 		});
-	} catch (error) {
+	} catch (error) {	
 		console.log("error in verifyEmail ", error);
 		res.status(500).json({ success: false, message: "Server error", error: error});
 	}

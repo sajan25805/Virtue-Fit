@@ -54,3 +54,6 @@ dump.rdb
 *.bak
 *.backup
 debug.log
+
+
+uploads/

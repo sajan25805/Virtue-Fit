@@ -10,10 +10,9 @@ const WorkoutSchema = new mongoose.Schema(
         time: {type:Number},
         aim: { type: String, enum: ["strength", "cardio", "flexibility" ]},
         thumbnail: { type: String },
-        steps: { type: [String], required: true },
         isCompleted: { type: Boolean, default: false },
         completedAt: { type: Date },
-        trainer: { type: mongoose.Schema.Types.ObjectId, ref: "Trainer", required: true }, // Linked Trainer
+        // trainer: { type: mongoose.Schema.Types.ObjectId, ref: "Trainer", required: true }, // Linked Trainer
       },
       { timestamps: true }
 );
