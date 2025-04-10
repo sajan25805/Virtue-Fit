@@ -1,4 +1,5 @@
 import { User } from "../../models/User.js";
+import { Trainer } from '../../models/Trainer.js';
 import bcryptjs from "bcryptjs";
 import { generateVerificationCode, generateTokenAndSetCookie } from "../../utils/token.js"
 import { sendVerificationEmail, sendWelcomeEmail } from "../../mailtrap/email.js";
@@ -111,47 +112,67 @@ export const signup = async (req, res) => {
 };
 
 
+
+
 export const verifyEmail = async (req, res) => {
 	const { code } = req.body;
+
 	try {
-		const user = await User.findOne({
+		let account = await User.findOne({
 			verificationToken: code,
 			verificationTokenExpiresAt: { $gt: Date.now() },
 		});
 
-		console.log(`Email verify Code: ${code}`);
+		let accountType = "User";
 
-		console.log(req.body);
-
-		if (!user) {
-			return res.status(400).json({ success: false, message: "Invalid or expired verification code" });
+		// If not found in User, check Trainer
+		if (!account) {
+			account = await Trainer.findOne({
+				verificationToken: code,
+				verificationTokenExpiresAt: { $gt: Date.now() },
+			});
+			accountType = "Trainer";
 		}
 
-		console.log(`Users: ${user}`);
+		if (!account) {
+			return res.status(400).json({
+				success: false,
+				message: "Invalid or expired verification code",
+			});
+		}
 
+		account.isVerified = true;
+		account.verificationToken = undefined;
+		account.verificationTokenExpiresAt = undefined;
+		await account.save();
 
-		user.isVerified = true;
-		user.verificationToken = undefined;
-		user.verificationTokenExpiresAt = undefined;
-		await user.save();
+		// Get name dynamically based on model
+		const fullName =
+			accountType === "Trainer"
+				? account.name
+				: `${account.firstName} ${account.lastName}`;
 
-		const userName = `${user.firstName} ${user.lastName}`
-
-		await sendWelcomeEmail(user.email, userName);
+		await sendWelcomeEmail(account.email, fullName);
 
 		res.status(200).json({
 			success: true,
-			message: "Email verified successfully",
+			message: `${accountType} email verified successfully`,
+			accountType,
 			user: {
-				...user._doc,
-				password: undefined,
+				...account._doc,
+				password: undefined, // Exclude password from response
 			},
 		});
-	} catch (error) {	
-		console.log("error in verifyEmail ", error);
-		res.status(500).json({ success: false, message: "Server error", error: error});
+	} catch (error) {
+		console.error("Error in verifyEmail:", error);
+		res.status(500).json({
+			success: false,
+			message: "Server error",
+			error: error.message || error,
+		});
 	}
 };
+
 
 
 

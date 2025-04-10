@@ -10,6 +10,7 @@ import fs from 'fs';
 
 const app = express();
 
+app.use(cors())
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +27,6 @@ if (!fs.existsSync(uploadsDir)) {
 
 
 
-app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -281,6 +281,11 @@ export const createWorkout = async (req, res) => {
       fs.unlinkSync(files.thumbnail[0].path);
     }
 
+        // Make sure trainer ID is included in the request body
+        if (!req.body.trainer) {
+          return res.status(400).json({ message: "Trainer ID is required" });
+        }
+        
     const workout = new Workout({
       ...req.body,
       videoUrl,
@@ -302,7 +307,11 @@ export const getWorkouts = async (req, res) => {
     if (difficulty) filter.difficulty = difficulty;
     if (aim) filter.aim = aim;
 
-    const workouts = await Workout.find(filter);
+    const workouts = await Workout.find(filter).populate({
+      path: 'trainer',
+      select: 'name email specialization profilePicture' // Select fields you want
+    });
+
     res.json(workouts);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -311,13 +320,21 @@ export const getWorkouts = async (req, res) => {
 
 export const getWorkoutById = async (req, res) => {
   try {
-    const workout = await Workout.findById(req.params.id);
-    if (!workout) return res.status(404).json({ message: 'Workout not found' });
+    const workout = await Workout.findById(req.params.id).populate({
+      path: 'trainer',
+      select: 'name email specialization bio profilePicture' // Select fields you want
+    });
+
+    if (!workout) {
+      return res.status(404).json({ message: 'Workout not found' });
+    }
+
     res.json(workout);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 export const updateWorkout = async (req, res) => {
   try {

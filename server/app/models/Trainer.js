@@ -16,6 +16,7 @@ const trainerSchema = new mongoose.Schema(
       required: true 
     },
     bio: { type: String, maxlength: 500 },
+    role: {type:String, default:"trainer"},
     profilePicture: { type: String }, // Cloudinary URL
     isActive: { type: Boolean, default: true },
     isVerified: {type: Boolean, default: false },

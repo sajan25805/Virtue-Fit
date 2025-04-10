@@ -70,6 +70,88 @@ export const registerTrainer = async (req, res) => {
 };
 
 
+
+
+// controllers/trainer.js
+export const loginTrainer = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email and password',
+      });
+    }
+
+    // Check if trainer exists
+    const trainer = await Trainer.findOne({ email });
+    if (!trainer) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid credentials',
+      });
+    }
+
+    // Check if account is active
+    if (!trainer.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Account is deactivated. Please contact support.',
+      });
+    }
+
+    // Check if account is verified
+    if (!trainer.isVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please verify your email before logging in.',
+      });
+    }
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, trainer.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid credentials',
+      });
+    }
+
+    // Update last login
+    trainer.lastLogin = Date.now();
+    await trainer.save();
+
+    // Generate token and set cookie
+    generateTokenAndSetCookie(res, trainer._id);
+
+    // Return response without sensitive data
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      trainer: {
+        _id: trainer._id,
+        name: trainer.name,
+        email: trainer.email,
+        specialization: trainer.specialization,
+        profilePicture: trainer.profilePicture,
+        isVerified: trainer.isVerified,
+        role: trainer.role,
+      },
+    });
+
+  } catch (error) {
+    console.error('Error logging in trainer:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
+
+
+
 export const getTrainers = async (req, res) => {
   try {
     const trainers = await Trainer.find().select('-password');
@@ -119,3 +201,28 @@ export const deleteTrainer = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// controllers/trainer.js
+export const logoutTrainer = (req, res) => {
+  try {
+    // Clear the token cookie
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: config.nodeEnv === 'production',
+      sameSite: 'Strict',
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Logged out successfully',
+    });
+  } catch (error) {
+    console.error('Error logging out trainer:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
+

@@ -6,12 +6,24 @@ import { useMeditationStore } from "../store/meditation-store"
 import { useProgramStore } from "../store/program-store"
 import { Card } from "../components/ui/card"
 import { Dumbbell, Utensils, Wind, Layers } from "lucide-react"
+import { useAuthStore } from "../store/auth-store"
 
 export function DashboardOverview() {
   const workouts = useWorkoutStore((state) => state.workouts)
   const meals = useMealStore((state) => state.meals)
   const meditations = useMeditationStore((state) => state.meditations)
   const programs = useProgramStore((state) => state.programs)
+
+
+
+
+  const trainer = useAuthStore((state) => {
+    console.log("Reading trainer from auth store:", state.trainer);
+    return state.trainer;
+  });
+
+  const isLoading = useAuthStore((state) => state.trainer);
+    console.log(isLoading);
 
   const stats = [
     {
