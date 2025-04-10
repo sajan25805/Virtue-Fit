@@ -8,7 +8,9 @@ import MainLayout from "./layouts/MainLayout";
 import WorkoutPage from "./pages/workout/WorkoutPage";
 import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login/Login";
-
+import WorkoutDetailPage from "./pages/workout/WorkoutDetailPage";
+import MealPage from "./pages/mealsSnacks/MealPage";
+import MealDetailPage from "./pages/mealsSnacks/MealDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -44,9 +46,22 @@ const router = createBrowserRouter([
         path: "/workout",
         element: <WorkoutPage />,
       },
+      {
+        path:"/workout/:id",
+        element: <WorkoutDetailPage/>
+      },
+      {
+        path: "/meal",
+        element: <MealPage />,
+      },
+      {
+        path:"/meal/:id",
+        element: <MealDetailPage/>
+      }
     ],
   },
 ]);
+
 
 export default function App() {
   return <RouterProvider router={router} />;

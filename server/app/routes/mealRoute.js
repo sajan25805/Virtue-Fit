@@ -2,20 +2,30 @@ import { Router } from "express";
 
 import {
   createMeal,
-  getAllMeals,
   getMealsByTrainer,
   getMealById,
   updateMeal,
-  deleteMeal
+  deleteMeal,
+  getMeals
 } from "../controllers/meal.js";
+
+import { upload } from '../middleware/multer.js';
+
 
 const router = Router();
 
-// Create a new meal
-router.post("/", createMeal);
+
+
+router.post(
+  '/',
+  upload.fields([
+    { name: 'thumbnail', maxCount: 1 }
+  ]),
+  createMeal
+);
 
 // Get all meals
-router.get("/", getAllMeals);
+router.get("/", getMeals);
 
 // Get meals by trainer ID
 router.get("/trainer/:trainerId", getMealsByTrainer);
@@ -24,7 +34,9 @@ router.get("/trainer/:trainerId", getMealsByTrainer);
 router.get("/:id", getMealById);
 
 // Update meal by ID
-router.put("/:id", updateMeal);
+router.put("/:id",   upload.fields([
+  { name: 'thumbnail', maxCount: 1 }
+]),updateMeal);
 
 // Delete meal by ID
 router.delete("/:id", deleteMeal);

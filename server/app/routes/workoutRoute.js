@@ -16,6 +16,7 @@ router.post(
   ]),
   createWorkout
 );
+
 router.get('/', getWorkouts);
 router.get('/:id', getWorkoutById);
 router.put(
@@ -29,5 +30,6 @@ router.put(
 router.delete('/:id',deleteWorkout);
 
 export { router as workoutRoute };
+
 
 

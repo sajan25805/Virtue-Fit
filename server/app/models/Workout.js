@@ -12,6 +12,7 @@ const WorkoutSchema = new mongoose.Schema(
         thumbnail: { type: String },
         isCompleted: { type: Boolean, default: false },
         completedAt: { type: Date },
+        calorie: {type: Number},
         trainer: { type: mongoose.Schema.Types.ObjectId, ref: "Trainer", required: true }, // Linked Trainer
       },
       { timestamps: true }

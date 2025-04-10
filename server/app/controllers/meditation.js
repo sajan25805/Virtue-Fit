@@ -18,6 +18,8 @@ export const createMeditation = async (req, res) => {
   }
 };
 
+
+
 // Get All Meditations
 export const getAllMeditations = async (req, res) => {
   try {

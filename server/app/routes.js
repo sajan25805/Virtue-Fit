@@ -15,10 +15,8 @@ const router = Router();
 router.use("/auth",authRoutes);
 router.use("/workouts",workoutRoute);
 router.use("/trainers",trainerRoute);
-
-// router.use("/meal",mealRoute);
-
-// router.use("/snack",snackRoute);
+router.use("/meals",mealRoute);
+router.use("/snacks",snackRoute);
 
 // router.use("/meditation",meditationRoute);
 

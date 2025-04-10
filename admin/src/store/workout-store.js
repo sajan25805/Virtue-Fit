@@ -23,6 +23,8 @@ export const useWorkoutStore = create((set) => ({
       });
     }
   },
+  
+
 
   addWorkout: async (formData) => {
     set({ loading: true });

@@ -1221,6 +1221,7 @@ export function WorkoutManagement() {
     time: 0,
     aim: "strength",
     thumbnail: null,
+    calorie:20
   });
 
   const trainer = localStorage.getItem("trainer") && JSON.parse(localStorage.getItem("trainer"));
@@ -1267,6 +1268,7 @@ export function WorkoutManagement() {
       workoutData.append("difficulty", formData.difficulty);
       workoutData.append("duration", formData.duration.toString());
       workoutData.append("aim", formData.aim);
+      workoutData.append("calorie", formData.calorie);
       workoutData.append("trainer", trainerId);
 
       if (formData.time) workoutData.append("time", formData.time.toString());
@@ -1460,7 +1462,21 @@ export function WorkoutManagement() {
                   disabled={workoutLoading}
                 />
               </div>
+
+              <div>
+              <Label htmlFor="calorie">Calorie Burn </Label>
+                <Input
+                  id="calorie"
+                  name="calorie"
+                  type="calorie"
+                  min="20"
+                  value={formData.calorie}
+                  onChange={handleInputChange}
+                  disabled={workoutLoading}
+                />
+              </div>
             </div>
+    
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
