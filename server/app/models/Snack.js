@@ -21,8 +21,6 @@ const snackScheam = new Schema(
     isVegetarian: { type: Boolean, default: false }, // Indicates if the snack is vegetarian
     isVegan: { type: Boolean, default: false }, // Indicates if the snack is vegan
     isGlutenFree: { type: Boolean, default: false }, // Indicates if the snack is gluten-free
-    servingSize: { type: String, required: true }, // Serving size info (e.g., "1 cup", "50g")
-    prepTime: { type: Number, required: true }, // Preparation time in minutes
   },
   { timestamps: true }
 );

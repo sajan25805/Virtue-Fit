@@ -11,6 +11,8 @@ import Login from "./pages/Login/Login";
 import WorkoutDetailPage from "./pages/workout/WorkoutDetailPage";
 import MealPage from "./pages/mealsSnacks/MealPage";
 import MealDetailPage from "./pages/mealsSnacks/MealDetailPage";
+import SnackPage from "./pages/mealsSnacks/SnackPage";
+import SnackDetailPage from "./pages/mealsSnacks/SnackDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +59,14 @@ const router = createBrowserRouter([
       {
         path:"/meal/:id",
         element: <MealDetailPage/>
+      },
+      {
+        path: "/snack",
+        element: <SnackPage />,
+      },
+      {
+        path:"/snack/:id",
+        element: <SnackDetailPage/>
       }
     ],
   },

@@ -219,7 +219,7 @@ const Eat = [
     id: 2,
     iconName: BookOpenIcon,
     labelName: "Snacks",
-    path: "/snacks"
+    path: "/snack"
   },
 ];
 

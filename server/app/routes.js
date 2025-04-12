@@ -17,8 +17,7 @@ router.use("/workouts",workoutRoute);
 router.use("/trainers",trainerRoute);
 router.use("/meals",mealRoute);
 router.use("/snacks",snackRoute);
-
-// router.use("/meditation",meditationRoute);
+router.use("/meditations",meditationRoute);
 
 
 

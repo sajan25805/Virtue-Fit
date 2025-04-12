@@ -7,7 +7,8 @@ import { ProgramManagement } from './pages/Program';
 import Layout from './Layout/Layout';
 import TrainerLogin from "./pages/Login/TrainerLogin";
 import TrainerSignup from './pages/Signup/TrainerSignup';
-import VerifyEmail from "./pages/VerifyEmail"
+import VerifyEmail from "./pages/VerifyEmail";
+import { SnackManagement } from './pages/SnackManagement';
 
 const App = () => (
   <Router>
@@ -19,6 +20,7 @@ const App = () => (
         <Route path="meals" element={<MealManagement />} />
         <Route path="meditations" element={<MeditationManagement />} />
         <Route path="programs" element={<ProgramManagement />} />
+        <Route path="snacks" element={<SnackManagement />} />
       </Route>
 
       {/* Outside the Layout */}

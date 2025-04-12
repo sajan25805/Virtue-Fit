@@ -52,7 +52,7 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import { Home, Dumbbell, Utensils, Wind, Layers, LogOut, Menu, X } from "lucide-react";
+import { Home, Dumbbell, Utensils, Pizza ,Wind, Layers, LogOut, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Sidebar({ activeTab, setActiveTab }) {
@@ -63,6 +63,7 @@ export function Sidebar({ activeTab, setActiveTab }) {
     { id: "home", label: "Overview", icon: Home, to: "/trainer/dashboard" },
     { id: "workouts", label: "Workouts", icon: Dumbbell, to: "/workout" },
     { id: "meals", label: "Meals", icon: Utensils, to: "/meals" },
+    { id: "snacks", label: "Snacks", icon: Pizza, to: "/snacks" }, 
     { id: "meditations", label: "Meditations", icon: Wind, to: "/meditations" },
     { id: "programs", label: "Programs", icon: Layers, to: "/programs" },
   ];

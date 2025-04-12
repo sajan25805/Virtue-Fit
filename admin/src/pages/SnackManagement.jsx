@@ -1,9 +1,6 @@
-
-
-
 "use client"
 
-import { useMealStore } from "../store/meal-store"; // Assuming you have a meal store
+import { useSnackStore } from "../store/snack-store"; // Assuming you have a snack store
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -13,7 +10,7 @@ import { Edit, Trash, Plus, X } from "lucide-react";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-export function MealManagement() {
+export function SnackManagement() {
   const navigate = useNavigate()
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState(null)
@@ -35,13 +32,13 @@ export function MealManagement() {
   const trainer = localStorage.getItem("trainer") && JSON.parse(localStorage.getItem("trainer"))
   const trainerId = trainer?._id
 
-  const { meals, loading: mealLoading, error, fetchMeals, addMeal, updateMeal, deleteMeal } = useMealStore()
+  const { snacks, loading: snackLoading, error, fetchSnacks, addSnack, updateSnack, deleteSnack } = useSnackStore()
 
   useEffect(() => {
     if (trainerId) {
-      fetchMeals()
+      fetchSnacks()
     }
-  }, [fetchMeals, trainerId])
+  }, [fetchSnacks, trainerId])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -66,54 +63,54 @@ export function MealManagement() {
     }
 
     try {
-      const mealData = new FormData()
+      const snackData = new FormData()
 
-      mealData.append("title", formData.title)
-      mealData.append("description", formData.description)
-      mealData.append("calories", formData.calories.toString())
-      mealData.append("protein", formData.protein.toString())
-      mealData.append("carbs", formData.carbs.toString())
-      mealData.append("fats", formData.fats.toString())
-      mealData.append("trainer", trainerId)
-      mealData.append("trainerName", trainer?.name || "")
+      snackData.append("title", formData.title)
+      snackData.append("description", formData.description)
+      snackData.append("calories", formData.calories.toString())
+      snackData.append("protein", formData.protein.toString())
+      snackData.append("carbs", formData.carbs.toString())
+      snackData.append("fats", formData.fats.toString())
+      snackData.append("trainer", trainerId)
+      snackData.append("trainerName", trainer?.name || "")
 
-      if (formData.ingredients) mealData.append("ingredients", formData.ingredients)
-      if (formData.recipes) mealData.append("recipes", formData.recipes)
+      if (formData.ingredients) snackData.append("ingredients", formData.ingredients)
+      if (formData.recipes) snackData.append("recipes", formData.recipes)
 
-      mealData.append("isVegetarian", formData.isVegetarian)
-      mealData.append("isVegan", formData.isVegan)
-      mealData.append("isGlutenFree", formData.isGlutenFree)
+      snackData.append("isVegetarian", formData.isVegetarian)
+      snackData.append("isVegan", formData.isVegan)
+      snackData.append("isGlutenFree", formData.isGlutenFree)
 
-      if (formData.thumbnail) mealData.append("thumbnail", formData.thumbnail)
+      if (formData.thumbnail) snackData.append("thumbnail", formData.thumbnail)
 
       if (editingId) {
-        await updateMeal(editingId, mealData)
+        await updateSnack(editingId, snackData)
       } else {
-        await addMeal(mealData)
+        await addSnack(snackData)
       }
 
       resetForm()
     } catch (error) {
-      console.error("Error submitting meal:", error)
+      console.error("Error submitting snack:", error)
     }
   }
 
-  const handleEdit = (meal) => {
+  const handleEdit = (snack) => {
     setIsAdding(true)
-    setEditingId(meal._id)
+    setEditingId(snack._id)
     setFormData({
-      title: meal.title || "",
-      description: meal.description || "",
-      calories: meal.calories || 0,
-      protein: meal.protein || 0,
-      carbs: meal.carbs || 0,
-      fats: meal.fats || 0,
+      title: snack.title || "",
+      description: snack.description || "",
+      calories: snack.calories || 0,
+      protein: snack.protein || 0,
+      carbs: snack.carbs || 0,
+      fats: snack.fats || 0,
       thumbnail: null,
-      recipes: Array.isArray(meal.recipes) ? meal.recipes.join("\n") : meal.recipes || "",
-      ingredients: Array.isArray(meal.ingredients) ? meal.ingredients.join("\n") : meal.ingredients || "",
-      isVegetarian: meal.isVegetarian || false,
-      isVegan: meal.isVegan || false,
-      isGlutenFree: meal.isGlutenFree || false,
+      recipes: Array.isArray(snack.recipes) ? snack.recipes.join("\n") : snack.recipes || "",
+      ingredients: Array.isArray(snack.ingredients) ? snack.ingredients.join("\n") : snack.ingredients || "",
+      isVegetarian: snack.isVegetarian || false,
+      isVegan: snack.isVegan || false,
+      isGlutenFree: snack.isGlutenFree || false,
     })
   }
 
@@ -140,7 +137,7 @@ export function MealManagement() {
     return (
       <div className="flex flex-col items-center justify-center h-64">
         <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
-        <p className="text-gray-600 mb-4">You need to be logged in as a trainer to manage meals.</p>
+        <p className="text-gray-600 mb-4">You need to be logged in as a trainer to manage snacks.</p>
         <Button onClick={() => navigate("/trainer/login")} className="bg-[#00A8FF] hover:bg-[#0096E6]">
           Go to Login
         </Button>
@@ -151,7 +148,7 @@ export function MealManagement() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Meal Management</h1>
+        <h1 className="text-2xl font-bold">Snack Management</h1>
         <Button
           onClick={() => {
             setIsAdding(true)
@@ -172,9 +169,9 @@ export function MealManagement() {
             })
           }}
           className="bg-[#00A8FF] hover:bg-[#0096E6]"
-          disabled={mealLoading}
+          disabled={snackLoading}
         >
-          <Plus className="mr-2 h-4 w-4" /> Add Meal
+          <Plus className="mr-2 h-4 w-4" /> Add Snack
         </Button>
       </div>
 
@@ -183,8 +180,8 @@ export function MealManagement() {
       {isAdding && (
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{editingId ? "Edit Meal" : "Add New Meal"}</h2>
-            <Button variant="ghost" size="icon" onClick={resetForm} disabled={mealLoading}>
+            <h2 className="text-lg font-semibold">{editingId ? "Edit Snack" : "Add New Snack"}</h2>
+            <Button variant="ghost" size="icon" onClick={resetForm} disabled={snackLoading}>
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -199,7 +196,7 @@ export function MealManagement() {
                 value={formData.title}
                 onChange={handleInputChange}
                 required
-                disabled={mealLoading}
+                disabled={snackLoading}
               />
             </div>
             <div>
@@ -213,7 +210,7 @@ export function MealManagement() {
                 onChange={handleInputChange}
                 rows={3}
                 required
-                disabled={mealLoading}
+                disabled={snackLoading}
               />
             </div>
 
@@ -227,7 +224,7 @@ export function MealManagement() {
                   value={formData.calories}
                   onChange={handleInputChange}
                   required
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
               <div>
@@ -239,7 +236,7 @@ export function MealManagement() {
                   value={formData.protein}
                   onChange={handleInputChange}
                   required
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
               <div>
@@ -251,7 +248,7 @@ export function MealManagement() {
                   value={formData.carbs}
                   onChange={handleInputChange}
                   required
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
               <div>
@@ -263,7 +260,7 @@ export function MealManagement() {
                   value={formData.fats}
                   onChange={handleInputChange}
                   required
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
             </div>
@@ -277,7 +274,7 @@ export function MealManagement() {
                   type="checkbox"
                   checked={formData.isVegetarian}
                   onChange={handleCheckboxChange}
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
               <div>
@@ -288,7 +285,7 @@ export function MealManagement() {
                   type="checkbox"
                   checked={formData.isVegan}
                   onChange={handleCheckboxChange}
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
               <div>
@@ -299,7 +296,7 @@ export function MealManagement() {
                   type="checkbox"
                   checked={formData.isGlutenFree}
                   onChange={handleCheckboxChange}
-                  disabled={mealLoading}
+                  disabled={snackLoading}
                 />
               </div>
             </div>
@@ -312,7 +309,7 @@ export function MealManagement() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleFileChange(e, "thumbnail")}
-                disabled={mealLoading}
+                disabled={snackLoading}
               />
             </div>
 
@@ -325,7 +322,7 @@ export function MealManagement() {
                 onChange={(e) => setFormData((prev) => ({ ...prev, ingredients: e.target.value }))}
                 placeholder="Enter ingredients in markdown format"
                 rows={5}
-                disabled={mealLoading}
+                disabled={snackLoading}
               />
             </div>
 
@@ -338,49 +335,49 @@ export function MealManagement() {
                 onChange={(e) => setFormData((prev) => ({ ...prev, recipes: e.target.value }))}
                 placeholder="Enter recipe steps in markdown format"
                 rows={8}
-                disabled={mealLoading}
+                disabled={snackLoading}
               />
             </div>
 
-            <Button type="submit" className="w-full bg-[#00A8FF] hover:bg-[#0096E6]" disabled={mealLoading}>
-              {editingId ? "Update Meal" : "Add Meal"}
+            <Button type="submit" className="w-full bg-[#00A8FF] hover:bg-[#0096E6]" disabled={snackLoading}>
+              {editingId ? "Update Snack" : "Add Snack"}
             </Button>
           </form>
         </Card>
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {meals.map((meal) => (
-          <Card key={meal._id} className="relative p-4">
+        {snacks.map((snack) => (
+          <Card key={snack._id} className="relative p-4">
             <div className="absolute top-0 right-0 space-x-2">
-              <Button variant="ghost" onClick={() => handleEdit(meal)}>
+              <Button variant="ghost" onClick={() => handleEdit(snack)}>
                 <Edit className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" onClick={() => deleteMeal(meal._id)}>
+              <Button variant="ghost" onClick={() => deleteSnack(snack._id)}>
                 <Trash className="h-4 w-4" />
               </Button>
             </div>
-            <img src={meal.thumbnail || "/placeholder.svg"} alt={meal.title} className="w-full h-40 object-cover" />
+            <img src={snack.thumbnail || "/placeholder.svg"} alt={snack.title} className="w-full h-40 object-cover" />
             <div className="mt-4">
-              <h3 className="font-semibold">{meal.title}</h3>
-              <p className="text-sm text-gray-500">{meal.description}</p>
+              <h3 className="font-semibold">{snack.title}</h3>
+              <p className="text-sm text-gray-500">{snack.description}</p>
             </div>
-            {meal.ingredients && meal.ingredients.length > 0 && (
+            {snack.ingredients && snack.ingredients.length > 0 && (
               <div className="mt-2">
                 <h4 className="text-xs font-semibold text-gray-700">INGREDIENTS</h4>
                 <ul className="text-xs text-gray-600 mt-1 list-disc pl-4">
-                  {meal.ingredients.slice(0, 3).map((ingredient, idx) => (
+                  {snack.ingredients.slice(0, 3).map((ingredient, idx) => (
                     <li key={idx}>{ingredient}</li>
                   ))}
-                  {meal.ingredients.length > 3 && <li className="italic">+{meal.ingredients.length - 3} more</li>}
+                  {snack.ingredients.length > 3 && <li className="italic">+{snack.ingredients.length - 3} more</li>}
                 </ul>
               </div>
             )}
-            {meal.recipes && meal.recipes.length > 0 && (
+            {snack.recipes && snack.recipes.length > 0 && (
               <div className="mt-2">
                 <h4 className="text-xs font-semibold text-gray-700">RECIPE</h4>
                 <p className="text-xs text-gray-600 mt-1">
-                  {meal.recipes.length} step{meal.recipes.length !== 1 ? "s" : ""}
+                  {snack.recipes.length} step{snack.recipes.length !== 1 ? "s" : ""}
                 </p>
               </div>
             )}

@@ -3,83 +3,83 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:8000/api"; // Update to match your backend
 
-export const useMealStore = create((set) => ({
-  meals: [],
+export const useSnackStore = create((set) => ({
+  snacks: [],
   loading: false,
   error: null,
 
-  fetchMeals: async () => {
+  fetchSnacks: async () => {
     set({ loading: true });
     try {
-      const response = await axios.get("/meals");
-      set({ meals: response.data, loading: false });
+      const response = await axios.get("/snacks");
+      set({ snacks: response.data, loading: false });
     } catch (error) {
       set({ 
-        error: error.response?.data?.message || "Failed to fetch meals",
+        error: error.response?.data?.message || "Failed to fetch snacks",
         loading: false 
       });
     }
   },
 
-  addMeal: async (formData) => {
+  addSnack: async (formData) => {
     set({ loading: true });
     try {
-      const response = await axios.post("/meals", formData, {
+      const response = await axios.post("/snacks", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       
       set((state) => ({
-        meals: [...state.meals, response.data],
+        snacks: [...state.snacks, response.data],
         loading: false
       }));
       return response.data;
     } catch (error) {
       set({ 
-        error: error.response?.data?.message || "Failed to add meal",
+        error: error.response?.data?.message || "Failed to add snack",
         loading: false 
       });
       throw error;
     }
   },
 
-  updateMeal: async (id, formData) => {
+  updateSnack: async (id, formData) => {
     set({ loading: true });
     try {
-      const response = await axios.put(`/meals/${id}`, formData, {
+      const response = await axios.put(`/snacks/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
   
       set((state) => ({
-        meals: state.meals.map((m) => 
-          m._id === id ? response.data : m
+        snacks: state.snacks.map((s) => 
+          s._id === id ? response.data : s
         ),
         loading: false
       }));
       return response.data;
     } catch (error) {
       set({ 
-        error: error.response?.data?.message || "Failed to update meal",
+        error: error.response?.data?.message || "Failed to update snack",
         loading: false 
       });
       throw error;
     }
   },
 
-  deleteMeal: async (id) => {
+  deleteSnack: async (id) => {
     set({ loading: true });
     try {
-      await axios.delete(`/meals/${id}`);
+      await axios.delete(`/snacks/${id}`);
       set((state) => ({
-        meals: state.meals.filter((m) => m._id !== id),
+        snacks: state.snacks.filter((s) => s._id !== id),
         loading: false
       }));
     } catch (error) {
       set({ 
-        error: error.response?.data?.message || "Failed to delete meal",
+        error: error.response?.data?.message || "Failed to delete snack",
         loading: false 
       });
       throw error;
