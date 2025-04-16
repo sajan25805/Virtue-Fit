@@ -3,10 +3,14 @@ import path from 'path';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+
+    console.log("File",file);
+      
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    console.log("UniqueSuffix",uniqueSuffix)
     cb(
       null,
       file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)
@@ -15,7 +19,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png|gif|mp4|mov|avi|mp3|wav/;
+  const filetypes = /jpeg|jpg|png|gif|mp4|mov|avi|mp3|wav|aac/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 

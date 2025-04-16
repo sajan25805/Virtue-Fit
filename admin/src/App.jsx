@@ -9,6 +9,11 @@ import TrainerLogin from "./pages/Login/TrainerLogin";
 import TrainerSignup from './pages/Signup/TrainerSignup';
 import VerifyEmail from "./pages/VerifyEmail";
 import { SnackManagement } from './pages/SnackManagement';
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminTrainer from "./pages/admin/trainers/AdminTrainers";
+import AdminUsers from "./pages/admin/users/AdminUsers";
+
+
 
 const App = () => (
   <Router>
@@ -27,6 +32,10 @@ const App = () => (
       <Route path="/trainer/login" element={<TrainerLogin />} />
       <Route path="/trainer/signup" element={<TrainerSignup />} />
       <Route path="/trainer/verify-email" element={<VerifyEmail />} />
+
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/trainers" element={<AdminTrainer />} />
+      <Route path="/admin/users" element={<AdminUsers />} />
 
     </Routes>
   </Router>

@@ -11,6 +11,8 @@ cloudinary.config({
 
 export const uploadToCloudinary = async (file, resourceType = 'auto') => {
   try {
+
+    console.log("Files", file);
     const result = await cloudinary.uploader.upload(file, {
       resource_type: resourceType,
     });

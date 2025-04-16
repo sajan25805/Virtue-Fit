@@ -36,22 +36,53 @@ export const useMeditationStore = create((set) => ({
     }
   },
 
-  // Add new meditation
+  // // Add new meditation
+  // addMeditation: async (formData) => {
+  //   set({ loading: true });
+  //   try {
+  //     const response = await axios.post("/meditations", formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+      
+  //     set((state) => ({
+  //       meditations: [...state.meditations, response.data],
+  //       loading: false
+  //     }));
+  //     return response.data;
+  //   } catch (error) {
+  //     set({ 
+  //       error: error.response?.data?.message || "Failed to add meditation",
+  //       loading: false 
+  //     });
+  //     throw error;
+  //   }
+  // },
+
+
   addMeditation: async (formData) => {
     set({ loading: true });
     try {
+      console.log("Sending meditation data to backend");
       const response = await axios.post("/meditations", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        onUploadProgress: (progressEvent) => {
+          console.log(`Upload progress: ${Math.round((progressEvent.loaded * 100) / progressEvent.total)}%`);
+        },
       });
       
+      console.log("Meditation created successfully:", response.data);
       set((state) => ({
         meditations: [...state.meditations, response.data],
         loading: false
       }));
       return response.data;
     } catch (error) {
+      console.error("Error adding meditation:", error);
+      console.error("Error response:", error.response);
       set({ 
         error: error.response?.data?.message || "Failed to add meditation",
         loading: false 
@@ -59,6 +90,7 @@ export const useMeditationStore = create((set) => ({
       throw error;
     }
   },
+  
 
   // Update meditation
   updateMeditation: async (id, formData) => {
