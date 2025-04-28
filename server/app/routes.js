@@ -5,7 +5,8 @@ import { snackRoute } from "./routes/snackRoute.js";
 import { meditationRoute } from "./routes/meditationRoute.js";
 import { workoutRoute } from "./routes/workoutRoute.js";
 import { trainerRoute } from "./routes/trainerRoute.js";
-
+import notificationRoute from "./routes/notificationRoutes.js"
+import workoutProgressRoute from "./routes/workoutProgressRoutes.js"
 
 
 
@@ -18,6 +19,11 @@ router.use("/trainers",trainerRoute);
 router.use("/meals",mealRoute);
 router.use("/snacks",snackRoute);
 router.use("/meditations",meditationRoute);
+router.use("/notifications",notificationRoute);
+router.use("/workout-progress",workoutProgressRoute);
+
+
+
 
 
 

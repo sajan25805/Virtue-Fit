@@ -1,12 +1,14 @@
 import express from 'express';
 
-import { createWorkout, getWorkouts, getWorkoutById, updateWorkout, deleteWorkout } from '../controllers/workout.js';
-
+import { createWorkout, getWorkouts, getWorkoutById, updateWorkout, deleteWorkout, rateWorkout } from '../controllers/workout.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/multer.js';
 
 const router = express.Router();
 
 
+// ⭐ Route for Rating
+router.patch("/rate/:workoutId", protect, rateWorkout);
 
 router.post(
   '/',

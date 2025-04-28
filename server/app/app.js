@@ -6,11 +6,28 @@ import cors from "cors";
 import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
-
+import {startWorkoutReminderCron} from "./utils/workoutReminderJob.js"
+ 
 
 const app = express();
 
-app.use(cors())
+
+
+const allowedOrigins = [
+  "http://localhost:5174",
+  "http://localhost:5173" // your second frontend URL
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +47,9 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+startWorkoutReminderCron();
+
 
 app.use("/api",apiRoutes);
 

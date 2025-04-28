@@ -299,6 +299,34 @@ export const createWorkout = async (req, res) => {
   }
 };
 
+
+export const rateWorkout = async (req, res) => {
+  const { workoutId } = req.params;
+  const { rating } = req.body;
+  const userId = req.userId; // From protect middleware
+
+  try {
+    const workout = await Workout.findById(workoutId);
+    if (!workout) {
+      return res.status(404).json({ success: false, message: "Workout not found" });
+    }
+
+    const alreadyRated = workout.ratings.find(r => r.user.toString() === userId);
+    if (alreadyRated) {
+      return res.status(400).json({ success: false, message: "You already rated this workout" });
+    }
+
+    workout.ratings.push({ user: userId, rating });
+    await workout.save();
+
+    res.status(200).json({ success: true, message: "Workout rated successfully" });
+  } catch (error) {
+    console.error("Error rating workout:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 export const getWorkouts = async (req, res) => {
   try {
     const { difficulty, aim } = req.query;

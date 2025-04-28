@@ -14,6 +14,13 @@ const WorkoutSchema = new mongoose.Schema(
         completedAt: { type: Date },
         calorie: {type: Number},
         trainer: { type: mongoose.Schema.Types.ObjectId, ref: "Trainer", required: true }, // Linked Trainer
+            // ⭐ NEW for Ratings:
+      ratings: [
+        {
+          user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          rating: { type: Number, min: 1, max: 5 }
+        }
+      ]
       },
       { timestamps: true }
 );
