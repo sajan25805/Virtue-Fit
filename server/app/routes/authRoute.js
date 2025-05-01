@@ -1,32 +1,35 @@
 import { Router } from "express";
-import {checkAuth, signup, verifyEmail, login, logout, forgotPassword, resetPassword} from "../controllers/auth/auth.js";
-import { verifyToken } from "../middleware/verifyToken.js";
+import {
+  checkAuth,
+  signup,
+  verifyEmail,
+  login,
+  logout,
+  forgotPassword,
+  resetPassword
+} from "../controllers/auth/auth.js";
+
+import { protect } from "../middleware/authMiddleware.js"; // or protect.js if renamed
+import { resendVerificationEmail } from "../controllers/auth/auth.js";
+
 
 const router = Router();
 
-
-
 /**
- * GET /api/auth/signup
+ * Auth Routes
  */
-router.post("/check-auth",verifyToken,checkAuth);
 
-router.post("/signup",signup);
+// ✅ Only for authenticated users
+router.get("/check-auth", protect, checkAuth);
+router.post("/logout", protect, logout);
 
-router.post("/verify-email",verifyEmail);
-
-router.post("/login",login);
-
-router.post("/logout",logout);
-
-router.post("/forgot-password",forgotPassword);
-
-router.post("/reset-password/:token",resetPassword);
-
+// ❌ Public routes (no token needed)
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/verify-email", verifyEmail);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
+router.post("/resend-verification-email", resendVerificationEmail); 
 
 
-export { router as authRoutes }
-
-
-
-
+export { router as authRoutes };

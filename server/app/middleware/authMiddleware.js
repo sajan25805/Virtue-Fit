@@ -1,23 +1,26 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 import { Trainer } from "../models/Trainer.js";
-import config from "../config/config.js"; // if you have a config, or replace with your jwt secret
+import config from "../config/config.js"; // Contains jwtSecret and other env config
 
 export const protect = async (req, res, next) => {
   try {
-    const token = req.cookies.token; // You are using cookies for token
+    const token = req.cookies.token; // 🍪 Read token from cookie
 
     if (!token) {
       return res.status(401).json({ success: false, message: "Not authorized, no token" });
     }
 
-    const decoded = jwt.verify(token, config.jwtSecret); // or replace with your hardcoded JWT secret
+    const decoded = jwt.verify(token, config.jwtSecret); // 🔐 Verify token with secret
 
-    // Check if user exists
+    // Try finding a regular user
     const user = await User.findById(decoded.userId);
 
-    if (!user) {
-      // Check if Trainer
+    if (user) {
+      req.userId = user._id;
+      req.role = "user";
+    } else {
+      // Try finding a trainer instead
       const trainer = await Trainer.findById(decoded.userId);
 
       if (!trainer) {
@@ -26,14 +29,11 @@ export const protect = async (req, res, next) => {
 
       req.userId = trainer._id;
       req.role = "trainer";
-    } else {
-      req.userId = user._id;
-      req.role = "user";
     }
 
-    next();
+    next(); // ✅ All good, proceed to route
   } catch (error) {
-    console.error("Auth Error:", error);
-    res.status(401).json({ success: false, message: "Not authorized, token failed" });
+    console.error("Auth Error:", error.message);
+    return res.status(401).json({ success: false, message: "Not authorized, token failed" });
   }
 };

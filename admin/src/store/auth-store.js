@@ -4,56 +4,26 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:8000/api';
 
 export const useAuthStore = create((set) => ({
-  trainer: null,
+  trainer: JSON.parse(localStorage.getItem('trainer')) || null,
   isLoading: false,
   error: null,
   isVerified: false,
 
-  // // Trainer Login
-  // login: async (credentials) => {
-  //   set({ isLoading: true, error: null });
-  //   try {
-  //     const response = await axios.post('/trainers/login', credentials);
-      
-  //     // No need to handle token manually - it's in cookies
-  //     set({ 
-  //       trainer: response.data.trainer,
-  //       isVerified: response.data.trainer.isVerified,
-  //       isLoading: false 
-  //     });
-  //     console.log("Login response:", response.data); // Check what's in the response
-
-  //     return response.data;
-  //   } catch (error) {
-  //     set({ 
-  //       error: error.response?.data?.message || 'Login failed',
-  //       isLoading: false 
-  //     });
-  //     throw error;
-  //   }
-  // },
 
 
   login: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post('/trainers/login', credentials);
-      
-      // Save trainer to localStorage
+      const response = await axios.post('/trainers/login', credentials, { withCredentials: true });
       localStorage.setItem('trainer', JSON.stringify(response.data.trainer));
-  
-      set({ 
+      set({
         trainer: response.data.trainer,
         isVerified: response.data.trainer.isVerified,
-        isLoading: false 
+        isLoading: false,
       });
-  
       return response.data;
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Login failed',
-        isLoading: false 
-      });
+      set({ error: error.response?.data?.message || 'Login failed', isLoading: false });
       throw error;
     }
   },
@@ -145,21 +115,14 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  // Logout
   logout: async () => {
     set({ isLoading: true });
     try {
-      await axios.post('/trainers/logout');
-      set({ 
-        trainer: null, 
-        isVerified: false,
-        isLoading: false 
-      });
+      await axios.post('/trainers/logout', {}, { withCredentials: true });
+      localStorage.removeItem('trainer');
+      set({ trainer: null, isVerified: false, isLoading: false });
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || 'Logout failed',
-        isLoading: false 
-      });
+      set({ error: error.response?.data?.message || 'Logout failed', isLoading: false });
       throw error;
     }
   },

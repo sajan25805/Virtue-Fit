@@ -1,16 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const { Schema, model } = mongoose;
+const workoutProgressSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  workout: { type: mongoose.Schema.Types.ObjectId, ref: "Workout", required: true },
+  isCompleted: { type: Boolean, default: false },
+  startedAt: { type: Date, default: Date.now },
+  completedAt: Date,
+  reminderSent: { type: Boolean, default: false } // New field to track reminder status
+}, { timestamps: true });
 
-const workoutProgressSchema = new Schema(
-  {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    workout: { type: mongoose.Schema.Types.ObjectId, ref: 'Workout', required: true },
-    isCompleted: { type: Boolean, default: false },
-    startedAt: { type: Date, default: Date.now },
-    completedAt: { type: Date }
-  },
-  { timestamps: true }
-);
-
-export const WorkoutProgress = model('WorkoutProgress', workoutProgressSchema);
+export const WorkoutProgress = mongoose.model("WorkoutProgress", workoutProgressSchema);

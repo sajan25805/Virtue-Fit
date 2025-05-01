@@ -112,6 +112,54 @@ export const signup = async (req, res) => {
 };
 
 
+export const resendVerificationEmail = async (req, res) => {
+	const { email } = req.body;
+  
+	try {
+	  // Check if user or trainer exists with that email
+	  let account = await User.findOne({ email });
+	  let accountType = "User";
+  
+	  if (!account) {
+		account = await Trainer.findOne({ email });
+		accountType = "Trainer";
+	  }
+  
+	  if (!account) {
+		return res.status(404).json({
+		  success: false,
+		  message: "Account not found with that email",
+		});
+	  }
+  
+	  if (account.isVerified) {
+		return res.status(400).json({
+		  success: false,
+		  message: "Account is already verified",
+		});
+	  }
+  
+	  // Generate new verification token
+	  const { verificationToken, verificationTokenExpiresAt } = generateVerificationCode();
+	  account.verificationToken = verificationToken;
+	  account.verificationTokenExpiresAt = verificationTokenExpiresAt;
+	  await account.save();
+  
+	  await sendVerificationEmail(account.email, verificationToken);
+  
+	  res.status(200).json({
+		success: true,
+		message: `Verification email resent to ${email}`,
+	  });
+	} catch (error) {
+	  console.error("Error in resendVerificationEmail:", error);
+	  res.status(500).json({
+		success: false,
+		message: "Server error",
+	  });
+	}
+  };
+  
 
 
 export const verifyEmail = async (req, res) => {
@@ -274,3 +322,36 @@ export const resetPassword = async (req, res) => {
 		res.status(400).json({ success: false, message: error.message });
 	}
 };
+
+
+
+// PATCH /api/auth/update-profile
+export const updateProfile = async (req, res) => {
+	try {
+	  const updates = { ...req.body };
+	  const user = await User.findByIdAndUpdate(req.userId, updates, { new: true });
+	  if (!user) return res.status(404).json({ success: false, message: "User not found" });
+  
+	  res.status(200).json({
+		success: true,
+		message: "Profile updated",
+		user: { ...user._doc, password: undefined }
+	  });
+	} catch (error) {
+	  res.status(500).json({ success: false, message: error.message });
+	}
+  };
+  
+  // DELETE /api/auth/delete-account
+  export const deleteAccount = async (req, res) => {
+	try {
+	  const user = await User.findByIdAndDelete(req.userId);
+	  if (!user) return res.status(404).json({ success: false, message: "User not found" });
+  
+	  res.clearCookie("token");
+	  res.status(200).json({ success: true, message: "Account deleted" });
+	} catch (error) {
+	  res.status(500).json({ success: false, message: error.message });
+	}
+  };
+  

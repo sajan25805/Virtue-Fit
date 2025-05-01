@@ -1,37 +1,52 @@
 import express from 'express';
-
-import { createWorkout, getWorkouts, getWorkoutById, updateWorkout, deleteWorkout, rateWorkout } from '../controllers/workout.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/multer.js';
+import {
+  createWorkout,
+  getWorkouts,
+  getWorkoutById,
+  updateWorkout,
+  deleteWorkout,
+  rateWorkout,
+  addWorkoutReview,
+  getWorkoutReviews,
+  updateWorkoutReview,
+  deleteWorkoutReview
+} from '../controllers/workout.js';
 
 const router = express.Router();
 
 
-// ⭐ Route for Rating
+// Rate a workout
 router.patch("/rate/:workoutId", protect, rateWorkout);
 
+// Review a Workout
+router.post('/:id/review', protect, addWorkoutReview);
+router.get('/:id/reviews', getWorkoutReviews);
+router.put('/:id/review/:reviewId', protect, updateWorkoutReview);
+router.delete('/:id/review/:reviewId', protect, deleteWorkoutReview);
+
+
+// Upload Video + Thumbnail
 router.post(
   '/',
-  upload.fields([
-    { name: 'video', maxCount: 1 },
-    { name: 'thumbnail', maxCount: 1 }
-  ]),
+  protect,
+  upload.fields([{ name: 'video', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }]),
   createWorkout
 );
 
 router.get('/', getWorkouts);
 router.get('/:id', getWorkoutById);
+
 router.put(
   '/:id',
-  upload.fields([
-    { name: 'video', maxCount: 1 },
-    { name: 'thumbnail', maxCount: 1 }
-  ]),
+  protect,
+  upload.fields([{ name: 'video', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }]),
   updateWorkout
 );
-router.delete('/:id',deleteWorkout);
+
+router.delete('/:id', protect, deleteWorkout);
 
 export { router as workoutRoute };
-
 
 

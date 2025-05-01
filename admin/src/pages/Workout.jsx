@@ -1,434 +1,61 @@
-// // // import { useState, useEffect } from "react";
-// // // import { useWorkoutStore } from "../store/workout-store";
-// // // import { Card } from "../components/ui/card";
-// // // import { Button } from "../components/ui/button";
-// // // import { Input } from "../components/ui/input";
-// // // import { Textarea } from "../components/ui/textarea";
-// // // import { Label } from "../components/ui/label";
-// // // import { Dumbbell, Edit, Trash, Plus, X } from "lucide-react";
-
-// // // export function WorkoutManagement() {
-// // //   const [isAdding, setIsAdding] = useState(false);
-// // //   const [editingId, setEditingId] = useState(null);
-// // //   const [formData, setFormData] = useState({
-// // //     title: "",
-// // //     description: "",
-// // //     difficulty: "Easy",
-// // //     duration: 30,
-// // //     videoFile: null,
-// // //     time: 0,
-// // //     aim: "strength",
-// // //     thumbnail: null,
-// // //   });
-
-// // //   const { 
-// // //     workouts, 
-// // //     loading, 
-// // //     error,
-// // //     fetchWorkouts, 
-// // //     addWorkout, 
-// // //     updateWorkout, 
-// // //     deleteWorkout 
-// // //   } = useWorkoutStore();
-
-// // //   useEffect(() => {
-// // //     fetchWorkouts();
-// // //   }, [fetchWorkouts]);
-
-// // //   const handleInputChange = (e) => {
-// // //     const { name, value } = e.target;
-// // //     setFormData((prev) => ({ ...prev, [name]: value }));
-// // //   };
-
-// // //   const handleFileChange = (e, field) => {
-// // //     setFormData((prev) => ({ ...prev, [field]: e.target.files[0] }));
-// // //   };
-
-// // //   const handleSubmit = async (e) => {
-// // //     e.preventDefault();
-    
-// // //     try {
-// // //       const workoutData = new FormData();
-      
-// // //       // Append all required fields
-// // //       workoutData.append("title", formData.title);
-// // //       workoutData.append("description", formData.description);
-// // //       workoutData.append("difficulty", formData.difficulty);
-// // //       workoutData.append("duration", formData.duration.toString()); // Ensure it's a string
-// // //       workoutData.append("aim", formData.aim);
-      
-// // //       // Append optional fields if they exist
-// // //       if (formData.time) {
-// // //         workoutData.append("time", formData.time.toString());
-// // //       }
-      
-// // //       // Append files if they exist
-// // //       if (formData.videoFile) {
-// // //         workoutData.append("video", formData.videoFile);
-// // //       }
-      
-// // //       if (formData.thumbnail) {
-// // //         workoutData.append("thumbnail", formData.thumbnail);
-// // //       }
-  
-// // //       if (editingId) {
-// // //         await updateWorkout(editingId, workoutData);
-// // //       } else {
-// // //         await addWorkout(workoutData);
-// // //       }
-  
-// // //       setIsAdding(false);
-// // //       setFormData({
-// // //         title: "",
-// // //         description: "",
-// // //         difficulty: "Easy",
-// // //         duration: 30,
-// // //         videoFile: null,
-// // //         time: 0,
-// // //         aim: "strength",
-// // //         thumbnail: null,
-// // //       });
-// // //     } catch (error) {
-// // //       console.error("Error submitting workout:", error);
-// // //     }
-// // //   };
-
-// // //   const handleEdit = (workout) => {
-// // //     setIsAdding(true);
-// // //     setEditingId(workout._id);
-// // //     setFormData({
-// // //       title: workout.title || "",
-// // //       description: workout.description || "",
-// // //       difficulty: workout.difficulty || "Easy",
-// // //       duration: workout.duration || 30,
-// // //       videoFile: null,
-// // //       time: workout.time || 0,
-// // //       aim: workout.aim || "strength",
-// // //       thumbnail: null, // Reset thumbnail for edit (or fetch existing if needed)
-// // //     });
-// // //   };
-
-// // //   const resetForm = () => {
-// // //     setIsAdding(false);
-// // //     setEditingId(null);
-// // //     setFormData({
-// // //       title: "",
-// // //       description: "",
-// // //       difficulty: "Easy",
-// // //       duration: 30,
-// // //       videoFile: null,
-// // //       time: 0,
-// // //       aim: "strength",
-// // //       thumbnail: null,
-// // //     });
-// // //   };
-
-// // //   return (
-// // //     <div className="space-y-6">
-// // //       <div className="flex items-center justify-between">
-// // //         <h1 className="text-2xl font-bold">Workout Management</h1>
-// // //         <Button
-// // //           onClick={() => {
-// // //             setIsAdding(true);
-// // //             setEditingId(null);
-// // //             setFormData({
-// // //               title: "",
-// // //               description: "",
-// // //               difficulty: "Easy",
-// // //               duration: 30,
-// // //               videoFile: null,
-// // //               time: 0,
-// // //               aim: "strength",
-// // //               thumbnail: null,
-// // //             });
-// // //           }}
-// // //           className="bg-[#00A8FF] hover:bg-[#0096E6]"
-// // //           disabled={loading}
-// // //         >
-// // //           <Plus className="mr-2 h-4 w-4" /> Add Workout
-// // //         </Button>
-// // //       </div>
-
-// // //       {error && (
-// // //         <div className="rounded-md bg-red-100 p-4 text-red-700">
-// // //           {error}
-// // //         </div>
-// // //       )}
-
-// // //       {isAdding && (
-// // //         <Card className="p-6">
-// // //           <div className="mb-4 flex items-center justify-between">
-// // //             <h2 className="text-lg font-semibold">
-// // //               {editingId ? "Edit Workout" : "Add New Workout"}
-// // //             </h2>
-// // //             <Button 
-// // //               variant="ghost" 
-// // //               size="icon" 
-// // //               onClick={resetForm}
-// // //               disabled={loading}
-// // //             >
-// // //               <X className="h-4 w-4" />
-// // //             </Button>
-// // //           </div>
-// // //           <form onSubmit={handleSubmit} className="space-y-4">
-// // //             <div>
-// // //               <Label htmlFor="title">
-// // //                 Title <span className="text-red-500">*</span>
-// // //               </Label>
-// // //               <Input
-// // //                 id="title"
-// // //                 name="title"
-// // //                 value={formData.title}
-// // //                 onChange={handleInputChange}
-// // //                 required
-// // //                 disabled={loading}
-// // //               />
-// // //             </div>
-
-// // //             <div>
-// // //               <Label htmlFor="description">
-// // //                 Description <span className="text-red-500">*</span>
-// // //               </Label>
-// // //               <Textarea
-// // //                 id="description"
-// // //                 name="description"
-// // //                 value={formData.description}
-// // //                 onChange={handleInputChange}
-// // //                 rows={3}
-// // //                 required
-// // //                 disabled={loading}
-// // //               />
-// // //             </div>
-
-// // //             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-// // //               <div>
-// // //                 <Label htmlFor="difficulty">Difficulty</Label>
-// // //                 <select
-// // //                   id="difficulty"
-// // //                   name="difficulty"
-// // //                   value={formData.difficulty}
-// // //                   onChange={handleInputChange}
-// // //                   className="w-full rounded-md border border-gray-300 p-2"
-// // //                   disabled={loading}
-// // //                 >
-// // //                   <option value="Easy">Easy</option>
-// // //                   <option value="Medium">Medium</option>
-// // //                   <option value="Hard">Hard</option>
-// // //                 </select>
-// // //               </div>
-
-// // //               <div>
-// // //                 <Label htmlFor="duration">Duration (minutes)</Label>
-// // //                 <Input
-// // //                   id="duration"
-// // //                   name="duration"
-// // //                   type="number"
-// // //                   min="1"
-// // //                   value={formData.duration}
-// // //                   onChange={handleInputChange}
-// // //                   required
-// // //                   disabled={loading}
-// // //                 />
-// // //               </div>
-// // //             </div>
-
-// // //             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-// // //               <div>
-// // //                 <Label htmlFor="videoFile">Video Upload</Label>
-// // //                 <Input
-// // //                   id="videoFile"
-// // //                   name="videoFile"
-// // //                   type="file"
-// // //                   accept="video/*"
-// // //                   onChange={(e) => handleFileChange(e, "videoFile")}
-// // //                   disabled={loading}
-// // //                 />
-// // //                 {formData.videoFile && (
-// // //                   <p className="text-xs text-muted-foreground">
-// // //                     Selected: {formData.videoFile.name}
-// // //                   </p>
-// // //                 )}
-// // //               </div>
-
-// // //               <div>
-// // //                 <Label htmlFor="time">Time (minutes)</Label>
-// // //                 <Input
-// // //                   id="time"
-// // //                   name="time"
-// // //                   type="number"
-// // //                   min="0"
-// // //                   value={formData.time}
-// // //                   onChange={handleInputChange}
-// // //                   disabled={loading}
-// // //                 />
-// // //               </div>
-// // //             </div>
-
-// // //             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-// // //               <div>
-// // //                 <Label htmlFor="aim">Aim</Label>
-// // //                 <select
-// // //                   id="aim"
-// // //                   name="aim"
-// // //                   value={formData.aim}
-// // //                   onChange={handleInputChange}
-// // //                   className="w-full rounded-md border border-gray-300 p-2"
-// // //                   disabled={loading}
-// // //                 >
-// // //                   <option value="strength">Strength</option>
-// // //                   <option value="cardio">Cardio</option>
-// // //                   <option value="flexibility">Flexibility</option>
-// // //                 </select>
-// // //               </div>
-
-// // //               <div>
-// // //                 <Label htmlFor="thumbnail">Thumbnail</Label>
-// // //                 <Input
-// // //                   id="thumbnail"
-// // //                   name="thumbnail"
-// // //                   type="file"
-// // //                   accept="image/*"
-// // //                   onChange={(e) => handleFileChange(e, "thumbnail")}
-// // //                   disabled={loading}
-// // //                 />
-// // //               </div>
-// // //             </div>
-
-// // //             <div className="flex justify-end">
-// // //               <Button 
-// // //                 type="submit" 
-// // //                 className="bg-[#00A8FF] hover:bg-[#0096E6]"
-// // //                 disabled={loading}
-// // //               >
-// // //                 {loading ? "Processing..." : editingId ? "Update Workout" : "Add Workout"}
-// // //               </Button>
-// // //             </div>
-// // //           </form>
-// // //         </Card>
-// // //       )}
-
-// // //       {loading && !isAdding ? (
-// // //         <div className="flex justify-center">
-// // //           <p>Loading workouts...</p>
-// // //         </div>
-// // //       ) : (
-// // //         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-// // //           {workouts.length > 0 ? (
-// // //             workouts.map((workout) => (
-// // //               <div key={workout._id} className="p-6 border rounded-md shadow-sm">
-// // //                 <div className="mb-4 flex items-center">
-// // //                   <div className="rounded-full bg-blue-100 p-2 text-blue-600">
-// // //                     <Dumbbell className="h-5 w-5" />
-// // //                   </div>
-// // //                   <div className="ml-3">
-// // //                     <h3 className="font-semibold">{workout.title}</h3>
-// // //                     <p className="text-sm text-gray-500">{workout.aim}</p>
-// // //                   </div>
-// // //                   <div className="ml-auto flex space-x-2">
-// // //                     <button 
-// // //                       onClick={() => handleEdit(workout)} 
-// // //                       className="text-blue-600"
-// // //                       disabled={loading}
-// // //                     >
-// // //                       <Edit className="h-4 w-4" />
-// // //                     </button>
-// // //                     <button 
-// // //                       onClick={() => deleteWorkout(workout._id)} 
-// // //                       className="text-red-600"
-// // //                       disabled={loading}
-// // //                     >
-// // //                       <Trash className="h-4 w-4" />
-// // //                     </button>
-// // //                   </div>
-// // //                 </div>
-// // //                 <p className="mb-3 text-sm">{workout.description}</p>
-// // //                 {workout.thumbnail && (
-// // //                   <img 
-// // //                     src={workout.thumbnail} 
-// // //                     alt={workout.title} 
-// // //                     className="mb-3 h-32 w-full object-cover rounded-md"
-// // //                   />
-// // //                 )}
-// // //                 <div className="flex items-center justify-between">
-// // //                   <span
-// // //                     className={`rounded-full px-2 py-1 text-xs ${
-// // //                       workout.difficulty === "Easy"
-// // //                         ? "bg-green-100 text-green-600"
-// // //                         : workout.difficulty === "Medium"
-// // //                         ? "bg-yellow-100 text-yellow-600"
-// // //                         : "bg-red-100 text-red-600"
-// // //                     }`}
-// // //                   >
-// // //                     {workout.difficulty}
-// // //                   </span>
-// // //                   <span className="text-sm text-gray-600">
-// // //                     {workout.duration} min
-// // //                   </span>
-// // //                 </div>
-// // //               </div>
-// // //             ))
-// // //           ) : (
-// // //             <p>No workouts available.</p>
-// // //           )}
-// // //         </div>
-// // //       )}
-// // //     </div>
-// // //   );
-// // // }
-
-
+// // "use client";
 
 // // import { useState, useEffect } from "react";
 // // import { useWorkoutStore } from "../store/workout-store";
-// // import { useAuthStore } from "../store/auth-store";
 // // import { useNavigate } from "react-router-dom";
 // // import { Card } from "../components/ui/card";
 // // import { Button } from "../components/ui/button";
 // // import { Input } from "../components/ui/input";
 // // import { Textarea } from "../components/ui/textarea";
 // // import { Label } from "../components/ui/label";
-// // import { Dumbbell, Edit, Trash, Plus, X } from "lucide-react";
-// // import { use } from "react";
+// // import { Plus, Trash, Edit, X } from "lucide-react";
 
 // // export function WorkoutManagement() {
 // //   const navigate = useNavigate();
+// //   const trainer = JSON.parse(localStorage.getItem("trainer"));
+// //   const trainerId = trainer?._id;
+
+// //   const {
+// //     workouts,
+// //     loading: workoutLoading,
+// //     error,
+// //     fetchWorkouts,
+// //     addWorkout,
+// //     updateWorkout,
+// //     deleteWorkout,
+// //   } = useWorkoutStore();
+
 // //   const [isAdding, setIsAdding] = useState(false);
 // //   const [editingId, setEditingId] = useState(null);
-// //   const [formData, setFormData] = useState({
-// //     title: "",
-// //     description: "",
-// //     difficulty: "Easy",
-// //     duration: 30,
-// //     videoFile: null,
-// //     time: 0,
-// //     aim: "strength",
-// //     thumbnail: null,
+// //   const [previewThumbnail, setPreviewThumbnail] = useState(null);
+// //   const [formData, setFormData] = useState(() => {
+// //     const saved = localStorage.getItem("draftWorkoutForm");
+// //     return saved
+// //       ? JSON.parse(saved)
+// //       : {
+// //           title: "",
+// //           description: "",
+// //           difficulty: "Easy",
+// //           duration: 30,
+// //           aim: "strength",
+// //           calorie: 20,
+// //           time: 0,
+// //           videoFile: null,
+// //           thumbnail: null,
+// //           sections: [],
+// //         };
 // //   });
 
-
-// //   const { trainer} = useAuthStore(state => ({
-// //     trainer: state.trainer,
-// //     isVerified: state.isVerified,
-// //     isLoading: state.isLoading,
-// //     error: state.error,
-// //   }));
-
-// //   console.log("Trainer ID", trainer);
-// //   const { 
-// //     workouts, 
-// //     loading, 
-// //     error,
-// //     fetchWorkouts, 
-// //     addWorkout, 
-// //     updateWorkout, 
-// //     deleteWorkout 
-// //   } = useWorkoutStore();
+// //   // Save draft on changes
+// //   useEffect(() => {
+// //     localStorage.setItem("draftWorkoutForm", JSON.stringify(formData));
+// //   }, [formData]);
 
 // //   useEffect(() => {
 // //     if (trainerId) {
 // //       fetchWorkouts();
 // //     }
-// //   }, [fetchWorkouts, trainerId]);
+// //   }, [trainerId]);
 
 // //   const handleInputChange = (e) => {
 // //     const { name, value } = e.target;
@@ -436,358 +63,202 @@
 // //   };
 
 // //   const handleFileChange = (e, field) => {
-// //     setFormData((prev) => ({ ...prev, [field]: e.target.files[0] }));
-// //   };
+// //     const file = e.target.files[0];
+// //     setFormData((prev) => ({ ...prev, [field]: file }));
 
-// //   const handleSubmit = async (e) => {
-// //     e.preventDefault();
-    
-// //     if (!trainerId) {
-// //       console.error("No trainer ID found - user might not be logged in");
-// //       return;
-// //     }
-
-// //     try {
-// //       const workoutData = new FormData();
-      
-// //       // Append all required fields
-// //       workoutData.append("title", formData.title);
-// //       workoutData.append("description", formData.description);
-// //       workoutData.append("difficulty", formData.difficulty);
-// //       workoutData.append("duration", formData.duration.toString());
-// //       workoutData.append("aim", formData.aim);
-// //       workoutData.append("trainer", trainerId); // Add trainer ID
-      
-// //       // Append optional fields if they exist
-// //       if (formData.time) {
-// //         workoutData.append("time", formData.time.toString());
-// //       }
-      
-// //       // Append files if they exist
-// //       if (formData.videoFile) {
-// //         workoutData.append("video", formData.videoFile);
-// //       }
-      
-// //       if (formData.thumbnail) {
-// //         workoutData.append("thumbnail", formData.thumbnail);
-// //       }
-  
-// //       if (editingId) {
-// //         await updateWorkout(editingId, workoutData);
-// //       } else {
-// //         await addWorkout(workoutData);
-// //       }
-  
-// //       setIsAdding(false);
-// //       setFormData({
-// //         title: "",
-// //         description: "",
-// //         difficulty: "Easy",
-// //         duration: 30,
-// //         videoFile: null,
-// //         time: 0,
-// //         aim: "strength",
-// //         thumbnail: null,
-// //       });
-// //     } catch (error) {
-// //       console.error("Error submitting workout:", error);
+// //     if (field === "thumbnail" && file) {
+// //       const reader = new FileReader();
+// //       reader.onload = (event) => setPreviewThumbnail(event.target.result);
+// //       reader.readAsDataURL(file);
 // //     }
 // //   };
 
-// //   const handleEdit = (workout) => {
-// //     setIsAdding(true);
-// //     setEditingId(workout._id);
-// //     setFormData({
-// //       title: workout.title || "",
-// //       description: workout.description || "",
-// //       difficulty: workout.difficulty || "Easy",
-// //       duration: workout.duration || 30,
-// //       videoFile: null,
-// //       time: workout.time || 0,
-// //       aim: workout.aim || "strength",
-// //       thumbnail: null,
-// //     });
+// //   const handleSectionChange = (index, field, value) => {
+// //     const updatedSections = [...formData.sections];
+// //     updatedSections[index][field] = value;
+// //     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+// //   };
+
+// //   const handleExerciseChange = (sectionIndex, exerciseIndex, field, value) => {
+// //     const updatedSections = [...formData.sections];
+// //     updatedSections[sectionIndex].exercises[exerciseIndex][field] = value;
+// //     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+// //   };
+
+// //   const addSection = () => {
+// //     setFormData((prev) => ({
+// //       ...prev,
+// //       sections: [...prev.sections, { title: "", description: "", exercises: [] }]
+// //     }));
+// //   };
+
+// //   const addExercise = (sectionIndex) => {
+// //     const updatedSections = [...formData.sections];
+// //     updatedSections[sectionIndex].exercises.push({ name: "", duration: "", thumbnail: "" });
+// //     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+// //   };
+
+// //   const removeSection = (index) => {
+// //     const updatedSections = [...formData.sections];
+// //     updatedSections.splice(index, 1);
+// //     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+// //   };
+
+// //   const removeExercise = (sectionIndex, exerciseIndex) => {
+// //     const updatedSections = [...formData.sections];
+// //     updatedSections[sectionIndex].exercises.splice(exerciseIndex, 1);
+// //     setFormData((prev) => ({ ...prev, sections: updatedSections }));
 // //   };
 
 // //   const resetForm = () => {
 // //     setIsAdding(false);
 // //     setEditingId(null);
+// //     setPreviewThumbnail(null);
 // //     setFormData({
 // //       title: "",
 // //       description: "",
 // //       difficulty: "Easy",
 // //       duration: 30,
-// //       videoFile: null,
-// //       time: 0,
 // //       aim: "strength",
+// //       calorie: 20,
+// //       time: 0,
+// //       videoFile: null,
 // //       thumbnail: null,
+// //       sections: [],
 // //     });
+// //     localStorage.removeItem("draftWorkoutForm");
 // //   };
 
-// //   // Redirect if not logged in as trainer
+// //   const handleSubmit = async (e) => {
+// //     e.preventDefault();
+// //     if (!trainerId) return alert("Trainer not logged in");
+
+// //     const workoutData = new FormData();
+// //     workoutData.append("title", formData.title);
+// //     workoutData.append("description", formData.description);
+// //     workoutData.append("difficulty", formData.difficulty);
+// //     workoutData.append("duration", formData.duration);
+// //     workoutData.append("aim", formData.aim);
+// //     workoutData.append("calorie", formData.calorie);
+// //     workoutData.append("time", formData.time);
+// //     workoutData.append("trainer", trainerId);
+
+// //     if (formData.videoFile) workoutData.append("video", formData.videoFile);
+// //     if (formData.thumbnail) workoutData.append("thumbnail", formData.thumbnail);
+// //     workoutData.append("sections", JSON.stringify(formData.sections));
+
+// //     try {
+// //       if (editingId) {
+// //         await updateWorkout(editingId, workoutData);
+// //       } else {
+// //         await addWorkout(workoutData);
+// //       }
+// //       resetForm();
+// //     } catch (err) {
+// //       console.error(err);
+// //     }
+// //   };
+
 // //   if (!trainerId) {
 // //     return (
-// //       <div className="flex flex-col items-center justify-center h-64">
-// //         <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
-// //         <p className="text-gray-600 mb-4">
-// //           You need to be logged in as a trainer to manage workouts.
-// //         </p>
-// //         <Button 
-// //           onClick={() => navigate('/register/login')} 
-// //           className="bg-[#00A8FF] hover:bg-[#0096E6]"
-// //         >
-// //           Go to Login
-// //         </Button>
+// //       <div className="h-screen flex flex-col justify-center items-center">
+// //         <h1 className="text-xl font-bold">Access Denied</h1>
+// //         <Button onClick={() => navigate("/trainer/login")}>Go to Trainer Login</Button>
 // //       </div>
 // //     );
 // //   }
 
 // //   return (
-// //     <div className="space-y-6">
-// //       <div className="flex items-center justify-between">
-// //         <h1 className="text-2xl font-bold">Workout Management</h1>
-// //         <Button
-// //           onClick={() => {
-// //             setIsAdding(true);
-// //             setEditingId(null);
-// //             setFormData({
-// //               title: "",
-// //               description: "",
-// //               difficulty: "Easy",
-// //               duration: 30,
-// //               videoFile: null,
-// //               time: 0,
-// //               aim: "strength",
-// //               thumbnail: null,
-// //             });
-// //           }}
-// //           className="bg-[#00A8FF] hover:bg-[#0096E6]"
-// //           disabled={loading}
-// //         >
-// //           <Plus className="mr-2 h-4 w-4" /> Add Workout
-// //         </Button>
+// //     <div className="space-y-8">
+// //       <div className="flex justify-between items-center">
+// //         <h1 className="text-2xl font-bold">Manage Workouts</h1>
+// //         <Button onClick={() => { setIsAdding(true); resetForm(); }}><Plus className="mr-2" />Add Workout</Button>
 // //       </div>
 
-// //       {error && (
-// //         <div className="rounded-md bg-red-100 p-4 text-red-700">
-// //           {error}
-// //         </div>
-// //       )}
-
 // //       {isAdding && (
-// //         <Card className="p-6">
-// //           <div className="mb-4 flex items-center justify-between">
-// //             <h2 className="text-lg font-semibold">
-// //               {editingId ? "Edit Workout" : "Add New Workout"}
-// //             </h2>
-// //             <Button 
-// //               variant="ghost" 
-// //               size="icon" 
-// //               onClick={resetForm}
-// //               disabled={loading}
-// //             >
-// //               <X className="h-4 w-4" />
-// //             </Button>
+// //         <Card className="p-6 space-y-6">
+// //           <div className="flex justify-between items-center">
+// //             <h2 className="text-lg font-semibold">{editingId ? "Edit Workout" : "New Workout"}</h2>
+// //             <Button variant="ghost" onClick={resetForm}><X /></Button>
 // //           </div>
+
 // //           <form onSubmit={handleSubmit} className="space-y-4">
-// //             <div>
-// //               <Label htmlFor="title">
-// //                 Title <span className="text-red-500">*</span>
-// //               </Label>
-// //               <Input
-// //                 id="title"
-// //                 name="title"
-// //                 value={formData.title}
-// //                 onChange={handleInputChange}
-// //                 required
-// //                 disabled={loading}
-// //               />
+// //             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+// //               <Input name="title" placeholder="Title" value={formData.title} onChange={handleInputChange} required />
+// //               <Input name="duration" placeholder="Duration (min)" type="number" value={formData.duration} onChange={handleInputChange} required />
+// //             </div>
+// //             <Textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} required />
+
+// //             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+// //               <Input name="calorie" placeholder="Calories Burn" type="number" value={formData.calorie} onChange={handleInputChange} />
+// //               <Input name="time" placeholder="Workout Time (hours)" type="number" value={formData.time} onChange={handleInputChange} />
 // //             </div>
 
-// //             <div>
-// //               <Label htmlFor="description">
-// //                 Description <span className="text-red-500">*</span>
-// //               </Label>
-// //               <Textarea
-// //                 id="description"
-// //                 name="description"
-// //                 value={formData.description}
-// //                 onChange={handleInputChange}
-// //                 rows={3}
-// //                 required
-// //                 disabled={loading}
-// //               />
-// //             </div>
-
-// //             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+// //             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+// //               <Input type="file" onChange={(e) => handleFileChange(e, "videoFile")} accept="video/*" />
 // //               <div>
-// //                 <Label htmlFor="difficulty">Difficulty</Label>
-// //                 <select
-// //                   id="difficulty"
-// //                   name="difficulty"
-// //                   value={formData.difficulty}
-// //                   onChange={handleInputChange}
-// //                   className="w-full rounded-md border border-gray-300 p-2"
-// //                   disabled={loading}
-// //                 >
-// //                   <option value="Easy">Easy</option>
-// //                   <option value="Medium">Medium</option>
-// //                   <option value="Hard">Hard</option>
-// //                 </select>
-// //               </div>
-
-// //               <div>
-// //                 <Label htmlFor="duration">Duration (minutes)</Label>
-// //                 <Input
-// //                   id="duration"
-// //                   name="duration"
-// //                   type="number"
-// //                   min="1"
-// //                   value={formData.duration}
-// //                   onChange={handleInputChange}
-// //                   required
-// //                   disabled={loading}
-// //                 />
-// //               </div>
-// //             </div>
-
-// //             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-// //               <div>
-// //                 <Label htmlFor="videoFile">Video Upload</Label>
-// //                 <Input
-// //                   id="videoFile"
-// //                   name="videoFile"
-// //                   type="file"
-// //                   accept="video/*"
-// //                   onChange={(e) => handleFileChange(e, "videoFile")}
-// //                   disabled={loading}
-// //                 />
-// //                 {formData.videoFile && (
-// //                   <p className="text-xs text-muted-foreground">
-// //                     Selected: {formData.videoFile.name}
-// //                   </p>
+// //                 <Input type="file" onChange={(e) => handleFileChange(e, "thumbnail")} accept="image/*" />
+// //                 {previewThumbnail && (
+// //                   <img src={previewThumbnail} alt="Preview" className="w-24 h-24 object-cover rounded mt-2" />
 // //                 )}
 // //               </div>
-
-// //               <div>
-// //                 <Label htmlFor="time">Time (minutes)</Label>
-// //                 <Input
-// //                   id="time"
-// //                   name="time"
-// //                   type="number"
-// //                   min="0"
-// //                   value={formData.time}
-// //                   onChange={handleInputChange}
-// //                   disabled={loading}
-// //                 />
-// //               </div>
 // //             </div>
 
-// //             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-// //               <div>
-// //                 <Label htmlFor="aim">Aim</Label>
-// //                 <select
-// //                   id="aim"
-// //                   name="aim"
-// //                   value={formData.aim}
-// //                   onChange={handleInputChange}
-// //                   className="w-full rounded-md border border-gray-300 p-2"
-// //                   disabled={loading}
-// //                 >
-// //                   <option value="strength">Strength</option>
-// //                   <option value="cardio">Cardio</option>
-// //                   <option value="flexibility">Flexibility</option>
-// //                 </select>
-// //               </div>
+// //             {/* Sections */}
+// //             <div className="space-y-4">
+// //               {formData.sections.map((section, sectionIdx) => (
+// //                 <div key={sectionIdx} className="p-4 bg-gray-100 rounded-md space-y-4">
+// //                   <div className="flex justify-between items-center">
+// //                     <h3 className="text-lg font-semibold">Section {sectionIdx + 1}</h3>
+// //                     <Button variant="destructive" onClick={() => removeSection(sectionIdx)}><Trash /></Button>
+// //                   </div>
 
-// //               <div>
-// //                 <Label htmlFor="thumbnail">Thumbnail</Label>
-// //                 <Input
-// //                   id="thumbnail"
-// //                   name="thumbnail"
-// //                   type="file"
-// //                   accept="image/*"
-// //                   onChange={(e) => handleFileChange(e, "thumbnail")}
-// //                   disabled={loading}
-// //                 />
-// //               </div>
+// //                   <Input placeholder="Section Title" value={section.title} onChange={(e) => handleSectionChange(sectionIdx, "title", e.target.value)} />
+// //                   <Textarea placeholder="Section Description" value={section.description} onChange={(e) => handleSectionChange(sectionIdx, "description", e.target.value)} />
+
+// //                   {/* Exercises */}
+// //                   {section.exercises.map((exercise, exerciseIdx) => (
+// //                     <div key={exerciseIdx} className="space-y-2">
+// //                       <Input placeholder="Exercise Name" value={exercise.name} onChange={(e) => handleExerciseChange(sectionIdx, exerciseIdx, "name", e.target.value)} />
+// //                       <Input placeholder="Duration (e.g., 00:30)" value={exercise.duration} onChange={(e) => handleExerciseChange(sectionIdx, exerciseIdx, "duration", e.target.value)} />
+// //                       <Input placeholder="Exercise Thumbnail URL" value={exercise.thumbnail} onChange={(e) => handleExerciseChange(sectionIdx, exerciseIdx, "thumbnail", e.target.value)} />
+// //                       <Button size="sm" variant="destructive" onClick={() => removeExercise(sectionIdx, exerciseIdx)}>Remove Exercise</Button>
+// //                     </div>
+// //                   ))}
+
+// //                   <Button size="sm" onClick={() => addExercise(sectionIdx)}>Add Exercise</Button>
+// //                 </div>
+// //               ))}
+// //               <Button variant="secondary" onClick={addSection}>Add Section</Button>
 // //             </div>
 
 // //             <div className="flex justify-end">
-// //               <Button 
-// //                 type="submit" 
-// //                 className="bg-[#00A8FF] hover:bg-[#0096E6]"
-// //                 disabled={loading}
-// //               >
-// //                 {loading ? "Processing..." : editingId ? "Update Workout" : "Add Workout"}
-// //               </Button>
+// //               <Button type="submit" disabled={workoutLoading}>{editingId ? "Update" : "Create"}</Button>
 // //             </div>
 // //           </form>
 // //         </Card>
 // //       )}
 
-// //       {loading && !isAdding ? (
-// //         <div className="flex justify-center">
-// //           <p>Loading workouts...</p>
-// //         </div>
-// //       ) : (
-// //         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+// //       {/* Workout List */}
+// //       {!isAdding && (
+// //         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 // //           {workouts.length > 0 ? (
 // //             workouts.map((workout) => (
 // //               <Card key={workout._id} className="p-6">
-// //                 <div className="mb-4 flex items-center">
-// //                   <div className="rounded-full bg-blue-100 p-2 text-blue-600">
-// //                     <Dumbbell className="h-5 w-5" />
-// //                   </div>
-// //                   <div className="ml-3">
-// //                     <h3 className="font-semibold">{workout.title}</h3>
-// //                     <p className="text-sm text-gray-500">{workout.aim}</p>
-// //                   </div>
-// //                   <div className="ml-auto flex space-x-2">
-// //                     <button 
-// //                       onClick={() => handleEdit(workout)} 
-// //                       className="text-blue-600 hover:text-blue-800"
-// //                       disabled={loading}
-// //                     >
-// //                       <Edit className="h-4 w-4" />
-// //                     </button>
-// //                     <button 
-// //                       onClick={() => deleteWorkout(workout._id)} 
-// //                       className="text-red-600 hover:text-red-800"
-// //                       disabled={loading}
-// //                     >
-// //                       <Trash className="h-4 w-4" />
-// //                     </button>
-// //                   </div>
-// //                 </div>
-// //                 <p className="mb-3 text-sm text-gray-600">{workout.description}</p>
-// //                 {workout.thumbnail && (
-// //                   <img 
-// //                     src={workout.thumbnail} 
-// //                     alt={workout.title} 
-// //                     className="mb-3 h-32 w-full object-cover rounded-md"
-// //                   />
-// //                 )}
-// //                 <div className="flex items-center justify-between">
-// //                   <span
-// //                     className={`rounded-full px-2 py-1 text-xs ${
-// //                       workout.difficulty === "Easy"
-// //                         ? "bg-green-100 text-green-600"
-// //                         : workout.difficulty === "Medium"
-// //                         ? "bg-yellow-100 text-yellow-600"
-// //                         : "bg-red-100 text-red-600"
-// //                     }`}
-// //                   >
-// //                     {workout.difficulty}
-// //                   </span>
-// //                   <span className="text-sm text-gray-600">
-// //                     {workout.duration} min
-// //                   </span>
+// //                 <h3 className="text-lg font-bold mb-2">{workout.title}</h3>
+// //                 <p className="text-gray-600 mb-2">{workout.description}</p>
+// //                 <div className="flex justify-end gap-2">
+// //                   <Button variant="outline" onClick={() => { setIsAdding(true); setEditingId(workout._id); setFormData({...workout, sections: workout.sections || []}) }}>
+// //                     <Edit className="mr-2" />Edit
+// //                   </Button>
+// //                   <Button variant="destructive" onClick={() => deleteWorkout(workout._id)}>
+// //                     <Trash className="mr-2" />Delete
+// //                   </Button>
 // //                 </div>
 // //               </Card>
 // //             ))
 // //           ) : (
-// //             <p className="text-gray-500">No workouts available. Create your first workout!</p>
+// //             <p className="text-center">No workouts created yet.</p>
 // //           )}
 // //         </div>
 // //       )}
@@ -795,60 +266,63 @@
 // //   );
 // // }
 
-
-
+// "use client";
 
 // import { useState, useEffect } from "react";
 // import { useWorkoutStore } from "../store/workout-store";
-// import { useAuthStore } from "../store/auth-store";
 // import { useNavigate } from "react-router-dom";
 // import { Card } from "../components/ui/card";
 // import { Button } from "../components/ui/button";
 // import { Input } from "../components/ui/input";
 // import { Textarea } from "../components/ui/textarea";
 // import { Label } from "../components/ui/label";
-// import { Dumbbell, Edit, Trash, Plus, X } from "lucide-react";
+// import { Plus, Trash, Edit, X } from "lucide-react";
 
 // export function WorkoutManagement() {
 //   const navigate = useNavigate();
-//   const [isAdding, setIsAdding] = useState(false);
-//   const [editingId, setEditingId] = useState(null);
-//   const [formData, setFormData] = useState({
-//     title: "",
-//     description: "",
-//     difficulty: "Easy",
-//     duration: 30,
-//     videoFile: null,
-//     time: 0,
-//     aim: "strength",
-//     thumbnail: null,
-//   });
-
-//   // Get auth state and trainer ID
-//   const trainer = useAuthStore((state) => state.trainer);
+//   const trainer = JSON.parse(localStorage.getItem("trainer"));
 //   const trainerId = trainer?._id;
 
-
-//   console.log("Trainer", trainer);
-
-//   const { 
-//     workouts, 
-//     loading: workoutLoading, 
+//   const {
+//     workouts,
+//     loading: workoutLoading,
 //     error,
-//     fetchWorkouts, 
-//     addWorkout, 
-//     updateWorkout, 
-//     deleteWorkout 
+//     fetchWorkouts,
+//     addWorkout,
+//     updateWorkout,
+//     deleteWorkout,
 //   } = useWorkoutStore();
 
-//   // Combined loading state
-//   const loading = authLoading || workoutLoading;
+//   const [isAdding, setIsAdding] = useState(false);
+//   const [editingId, setEditingId] = useState(null);
+//   const [previewThumbnail, setPreviewThumbnail] = useState(null);
+//   const [formData, setFormData] = useState(() => {
+//     const saved = localStorage.getItem("draftWorkoutForm");
+//     return saved
+//       ? JSON.parse(saved)
+//       : {
+//           title: "",
+//           description: "",
+//           difficulty: "Easy",
+//           duration: 30,
+//           aim: "strength",
+//           calorie: 20,
+//           time: 0,
+//           videoFile: null,
+//           thumbnail: null,
+//           sections: [],
+//         };
+//   });
+
+//   useEffect(() => {
+//     localStorage.setItem("draftWorkoutForm", JSON.stringify(formData));
+//   }, [formData]);
 
 //   useEffect(() => {
 //     if (trainerId) {
 //       fetchWorkouts();
 //     }
-//   }, [fetchWorkouts, trainerId]);
+//   }, [trainerId]);
 
 //   const handleInputChange = (e) => {
 //     const { name, value } = e.target;
@@ -856,339 +330,203 @@
 //   };
 
 //   const handleFileChange = (e, field) => {
-//     setFormData((prev) => ({ ...prev, [field]: e.target.files[0] }));
-//   };
+//     const file = e.target.files[0];
+//     setFormData((prev) => ({ ...prev, [field]: file }));
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-    
-//     if (!trainerId) {
-//       console.error("No trainer ID found - user might not be logged in");
-//       return;
-//     }
-
-//     try {
-//       const workoutData = new FormData();
-      
-//       // Required fields
-//       workoutData.append("title", formData.title);
-//       workoutData.append("description", formData.description);
-//       workoutData.append("difficulty", formData.difficulty);
-//       workoutData.append("duration", formData.duration.toString());
-//       workoutData.append("aim", formData.aim);
-//       workoutData.append("trainer", trainerId);
-      
-//       // Optional fields
-//       if (formData.time) workoutData.append("time", formData.time.toString());
-//       if (formData.videoFile) workoutData.append("video", formData.videoFile);
-//       if (formData.thumbnail) workoutData.append("thumbnail", formData.thumbnail);
-  
-//       if (editingId) {
-//         await updateWorkout(editingId, workoutData);
-//       } else {
-//         await addWorkout(workoutData);
-//       }
-  
-//       resetForm();
-//     } catch (error) {
-//       console.error("Error submitting workout:", error);
+//     if (field === "thumbnail" && file) {
+//       const reader = new FileReader();
+//       reader.onload = (event) => setPreviewThumbnail(event.target.result);
+//       reader.readAsDataURL(file);
 //     }
 //   };
 
-//   const handleEdit = (workout) => {
-//     setIsAdding(true);
-//     setEditingId(workout._id);
-//     setFormData({
-//       title: workout.title || "",
-//       description: workout.description || "",
-//       difficulty: workout.difficulty || "Easy",
-//       duration: workout.duration || 30,
-//       videoFile: null,
-//       time: workout.time || 0,
-//       aim: workout.aim || "strength",
-//       thumbnail: null,
-//     });
+//   const handleSectionChange = (index, field, value) => {
+//     const updatedSections = [...formData.sections];
+//     updatedSections[index][field] = value;
+//     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+//   };
+
+//   const handleExerciseChange = (sectionIndex, exerciseIndex, field, value) => {
+//     const updatedSections = [...formData.sections];
+//     updatedSections[sectionIndex].exercises[exerciseIndex][field] = value;
+//     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+//   };
+
+//   const addSection = () => {
+//     setFormData((prev) => ({
+//       ...prev,
+//       sections: [...prev.sections, { title: "", description: "", exercises: [] }]
+//     }));
+//   };
+
+//   const addExercise = (sectionIndex) => {
+//     const updatedSections = [...formData.sections];
+//     updatedSections[sectionIndex].exercises.push({ name: "", duration: "", thumbnail: "" });
+//     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+//   };
+
+//   const removeSection = (index) => {
+//     const updatedSections = [...formData.sections];
+//     updatedSections.splice(index, 1);
+//     setFormData((prev) => ({ ...prev, sections: updatedSections }));
+//   };
+
+//   const removeExercise = (sectionIndex, exerciseIndex) => {
+//     const updatedSections = [...formData.sections];
+//     updatedSections[sectionIndex].exercises.splice(exerciseIndex, 1);
+//     setFormData((prev) => ({ ...prev, sections: updatedSections }));
 //   };
 
 //   const resetForm = () => {
-//     setIsAdding(false);
 //     setEditingId(null);
+//     setPreviewThumbnail(null);
 //     setFormData({
 //       title: "",
 //       description: "",
 //       difficulty: "Easy",
 //       duration: 30,
-//       videoFile: null,
-//       time: 0,
 //       aim: "strength",
+//       calorie: 20,
+//       time: 0,
+//       videoFile: null,
 //       thumbnail: null,
+//       sections: [],
 //     });
+//     localStorage.removeItem("draftWorkoutForm");
 //   };
 
-//   // Redirect if not logged in as trainer
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!trainerId) return alert("Trainer not logged in");
+
+//     const workoutData = new FormData();
+//     workoutData.append("title", formData.title);
+//     workoutData.append("description", formData.description);
+//     workoutData.append("difficulty", formData.difficulty);
+//     workoutData.append("duration", formData.duration);
+//     workoutData.append("aim", formData.aim);
+//     workoutData.append("calorie", formData.calorie);
+//     workoutData.append("time", formData.time);
+//     workoutData.append("trainer", trainerId);
+
+//     if (formData.videoFile) workoutData.append("video", formData.videoFile);
+//     if (formData.thumbnail) workoutData.append("thumbnail", formData.thumbnail);
+//     workoutData.append("sections", JSON.stringify(formData.sections));
+
+//     try {
+//       if (editingId) {
+//         await updateWorkout(editingId, workoutData);
+//       } else {
+//         await addWorkout(workoutData);
+//       }
+//       setIsAdding(false); // ✅ After submit, hide form
+//       resetForm();
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
 //   if (!trainerId) {
 //     return (
-//       <div className="flex flex-col items-center justify-center h-64">
-//         <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
-//         <p className="text-gray-600 mb-4">
-//           You need to be logged in as a trainer to manage workouts.
-//         </p>
-//         <Button 
-//           onClick={() => navigate('/register/login')} 
-//           className="bg-[#00A8FF] hover:bg-[#0096E6]"
-//         >
-//           Go to Login
-//         </Button>
+//       <div className="h-screen flex flex-col justify-center items-center">
+//         <h1 className="text-xl font-bold">Access Denied</h1>
+//         <Button onClick={() => navigate("/trainer/login")}>Go to Trainer Login</Button>
 //       </div>
 //     );
 //   }
 
 //   return (
-//     <div className="space-y-6">
-//       <div className="flex items-center justify-between">
-//         <h1 className="text-2xl font-bold">Workout Management</h1>
-//         <Button
-//           onClick={() => {
-//             setIsAdding(true);
-//             setEditingId(null);
-//             setFormData({
-//               title: "",
-//               description: "",
-//               difficulty: "Easy",
-//               duration: 30,
-//               videoFile: null,
-//               time: 0,
-//               aim: "strength",
-//               thumbnail: null,
-//             });
-//           }}
-//           className="bg-[#00A8FF] hover:bg-[#0096E6]"
-//           disabled={loading}
-//         >
-//           <Plus className="mr-2 h-4 w-4" /> Add Workout
+//     <div className="space-y-8">
+//       <div className="flex justify-between items-center">
+//         <h1 className="text-2xl font-bold">Manage Workouts</h1>
+//         <Button onClick={() => { resetForm(); setIsAdding(true); }}>
+//           <Plus className="mr-2" /> Add Workout
 //         </Button>
 //       </div>
 
-//       {error && (
-//         <div className="rounded-md bg-red-100 p-4 text-red-700">
-//           {error}
-//         </div>
-//       )}
-
 //       {isAdding && (
-//         <Card className="p-6">
-//           <div className="mb-4 flex items-center justify-between">
-//             <h2 className="text-lg font-semibold">
-//               {editingId ? "Edit Workout" : "Add New Workout"}
-//             </h2>
-//             <Button 
-//               variant="ghost" 
-//               size="icon" 
-//               onClick={resetForm}
-//               disabled={loading}
-//             >
-//               <X className="h-4 w-4" />
-//             </Button>
+//         <Card className="p-6 space-y-6">
+//           <div className="flex justify-between items-center">
+//             <h2 className="text-lg font-semibold">{editingId ? "Edit Workout" : "New Workout"}</h2>
+//             <Button variant="ghost" onClick={() => setIsAdding(false)}><X /></Button>
 //           </div>
+
 //           <form onSubmit={handleSubmit} className="space-y-4">
-//             <div>
-//               <Label htmlFor="title">
-//                 Title <span className="text-red-500">*</span>
-//               </Label>
-//               <Input
-//                 id="title"
-//                 name="title"
-//                 value={formData.title}
-//                 onChange={handleInputChange}
-//                 required
-//                 disabled={loading}
-//               />
+//             {/* Form fields */}
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Input name="title" placeholder="Title" value={formData.title} onChange={handleInputChange} required />
+//               <Input name="duration" placeholder="Duration (min)" type="number" value={formData.duration} onChange={handleInputChange} required />
+//             </div>
+//             <Textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} required />
+
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Input name="calorie" placeholder="Calories Burn" type="number" value={formData.calorie} onChange={handleInputChange} />
+//               <Input name="time" placeholder="Workout Time (hours)" type="number" value={formData.time} onChange={handleInputChange} />
 //             </div>
 
-//             <div>
-//               <Label htmlFor="description">
-//                 Description <span className="text-red-500">*</span>
-//               </Label>
-//               <Textarea
-//                 id="description"
-//                 name="description"
-//                 value={formData.description}
-//                 onChange={handleInputChange}
-//                 rows={3}
-//                 required
-//                 disabled={loading}
-//               />
-//             </div>
-
-//             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//               <Input type="file" onChange={(e) => handleFileChange(e, "videoFile")} accept="video/*" />
 //               <div>
-//                 <Label htmlFor="difficulty">Difficulty</Label>
-//                 <select
-//                   id="difficulty"
-//                   name="difficulty"
-//                   value={formData.difficulty}
-//                   onChange={handleInputChange}
-//                   className="w-full rounded-md border border-gray-300 p-2"
-//                   disabled={loading}
-//                 >
-//                   <option value="Easy">Easy</option>
-//                   <option value="Medium">Medium</option>
-//                   <option value="Hard">Hard</option>
-//                 </select>
-//               </div>
-
-//               <div>
-//                 <Label htmlFor="duration">Duration (minutes)</Label>
-//                 <Input
-//                   id="duration"
-//                   name="duration"
-//                   type="number"
-//                   min="1"
-//                   value={formData.duration}
-//                   onChange={handleInputChange}
-//                   required
-//                   disabled={loading}
-//                 />
-//               </div>
-//             </div>
-
-//             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-//               <div>
-//                 <Label htmlFor="videoFile">Video Upload</Label>
-//                 <Input
-//                   id="videoFile"
-//                   name="videoFile"
-//                   type="file"
-//                   accept="video/*"
-//                   onChange={(e) => handleFileChange(e, "videoFile")}
-//                   disabled={loading}
-//                 />
-//                 {formData.videoFile && (
-//                   <p className="text-xs text-muted-foreground">
-//                     Selected: {formData.videoFile.name}
-//                   </p>
+//                 <Input type="file" onChange={(e) => handleFileChange(e, "thumbnail")} accept="image/*" />
+//                 {previewThumbnail && (
+//                   <img src={previewThumbnail} alt="Preview" className="w-24 h-24 object-cover rounded mt-2" />
 //                 )}
 //               </div>
-
-//               <div>
-//                 <Label htmlFor="time">Time (minutes)</Label>
-//                 <Input
-//                   id="time"
-//                   name="time"
-//                   type="number"
-//                   min="0"
-//                   value={formData.time}
-//                   onChange={handleInputChange}
-//                   disabled={loading}
-//                 />
-//               </div>
 //             </div>
 
-//             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-//               <div>
-//                 <Label htmlFor="aim">Aim</Label>
-//                 <select
-//                   id="aim"
-//                   name="aim"
-//                   value={formData.aim}
-//                   onChange={handleInputChange}
-//                   className="w-full rounded-md border border-gray-300 p-2"
-//                   disabled={loading}
-//                 >
-//                   <option value="strength">Strength</option>
-//                   <option value="cardio">Cardio</option>
-//                   <option value="flexibility">Flexibility</option>
-//                 </select>
-//               </div>
+//             {/* Sections and Exercises */}
+//             <div className="space-y-4">
+//               {formData.sections.map((section, sectionIdx) => (
+//                 <div key={sectionIdx} className="p-4 bg-gray-100 rounded-md space-y-4">
+//                   <div className="flex justify-between items-center">
+//                     <h3 className="text-lg font-semibold">Section {sectionIdx + 1}</h3>
+//                     <Button variant="destructive" onClick={() => removeSection(sectionIdx)}><Trash /></Button>
+//                   </div>
 
-//               <div>
-//                 <Label htmlFor="thumbnail">Thumbnail</Label>
-//                 <Input
-//                   id="thumbnail"
-//                   name="thumbnail"
-//                   type="file"
-//                   accept="image/*"
-//                   onChange={(e) => handleFileChange(e, "thumbnail")}
-//                   disabled={loading}
-//                 />
-//               </div>
+//                   <Input placeholder="Section Title" value={section.title} onChange={(e) => handleSectionChange(sectionIdx, "title", e.target.value)} />
+//                   <Textarea placeholder="Section Description" value={section.description} onChange={(e) => handleSectionChange(sectionIdx, "description", e.target.value)} />
+
+//                   {section.exercises.map((exercise, exerciseIdx) => (
+//                     <div key={exerciseIdx} className="space-y-2">
+//                       <Input placeholder="Exercise Name" value={exercise.name} onChange={(e) => handleExerciseChange(sectionIdx, exerciseIdx, "name", e.target.value)} />
+//                       <Input placeholder="Duration (e.g., 00:30)" value={exercise.duration} onChange={(e) => handleExerciseChange(sectionIdx, exerciseIdx, "duration", e.target.value)} />
+//                       <Input placeholder="Exercise Thumbnail URL" value={exercise.thumbnail} onChange={(e) => handleExerciseChange(sectionIdx, exerciseIdx, "thumbnail", e.target.value)} />
+//                       <Button size="sm" variant="destructive" onClick={() => removeExercise(sectionIdx, exerciseIdx)}>Remove Exercise</Button>
+//                     </div>
+//                   ))}
+//                   <Button size="sm" onClick={() => addExercise(sectionIdx)}>Add Exercise</Button>
+//                 </div>
+//               ))}
+//               <Button variant="secondary" onClick={addSection}>Add Section</Button>
 //             </div>
 
 //             <div className="flex justify-end">
-//               <Button 
-//                 type="submit" 
-//                 className="bg-[#00A8FF] hover:bg-[#0096E6]"
-//                 disabled={loading}
-//               >
-//                 {loading ? "Processing..." : editingId ? "Update Workout" : "Add Workout"}
-//               </Button>
+//               <Button type="submit" disabled={workoutLoading}>{editingId ? "Update" : "Create"}</Button>
 //             </div>
 //           </form>
 //         </Card>
 //       )}
 
-//       {loading && !isAdding ? (
-//         <div className="flex justify-center">
-//           <p>Loading workouts...</p>
-//         </div>
-//       ) : (
-//         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+//       {/* Workout List */}
+//       {!isAdding && (
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 //           {workouts.length > 0 ? (
 //             workouts.map((workout) => (
 //               <Card key={workout._id} className="p-6">
-//                 <div className="mb-4 flex items-center">
-//                   <div className="rounded-full bg-blue-100 p-2 text-blue-600">
-//                     <Dumbbell className="h-5 w-5" />
-//                   </div>
-//                   <div className="ml-3">
-//                     <h3 className="font-semibold">{workout.title}</h3>
-//                     <p className="text-sm text-gray-500">{workout.aim}</p>
-//                   </div>
-//                   <div className="ml-auto flex space-x-2">
-//                     <button 
-//                       onClick={() => handleEdit(workout)} 
-//                       className="text-blue-600 hover:text-blue-800"
-//                       disabled={loading}
-//                     >
-//                       <Edit className="h-4 w-4" />
-//                     </button>
-//                     <button 
-//                       onClick={() => deleteWorkout(workout._id)} 
-//                       className="text-red-600 hover:text-red-800"
-//                       disabled={loading}
-//                     >
-//                       <Trash className="h-4 w-4" />
-//                     </button>
-//                   </div>
-//                 </div>
-//                 <p className="mb-3 text-sm text-gray-600">{workout.description}</p>
-//                 {workout.thumbnail && (
-//                   <img 
-//                     src={workout.thumbnail} 
-//                     alt={workout.title} 
-//                     className="mb-3 h-32 w-full object-cover rounded-md"
-//                   />
-//                 )}
-//                 <div className="flex items-center justify-between">
-//                   <span
-//                     className={`rounded-full px-2 py-1 text-xs ${
-//                       workout.difficulty === "Easy"
-//                         ? "bg-green-100 text-green-600"
-//                         : workout.difficulty === "Medium"
-//                         ? "bg-yellow-100 text-yellow-600"
-//                         : "bg-red-100 text-red-600"
-//                     }`}
-//                   >
-//                     {workout.difficulty}
-//                   </span>
-//                   <span className="text-sm text-gray-600">
-//                     {workout.duration} min
-//                   </span>
+//                 <h3 className="text-lg font-bold mb-2">{workout.title}</h3>
+//                 <p className="text-gray-600 mb-2">{workout.description}</p>
+//                 <div className="flex justify-end gap-2">
+//                   <Button variant="outline" onClick={() => { resetForm(); setIsAdding(true); setEditingId(workout._id); setFormData({...workout, sections: workout.sections || []}) }}>
+//                     <Edit className="mr-2" />Edit
+//                   </Button>
+//                   <Button variant="destructive" onClick={() => deleteWorkout(workout._id)}>
+//                     <Trash className="mr-2" />Delete
+//                   </Button>
 //                 </div>
 //               </Card>
 //             ))
 //           ) : (
-//             <p className="text-gray-500">No workouts available. Create your first workout!</p>
+//             <p className="text-center">No workouts created yet.</p>
 //           )}
 //         </div>
 //       )}
@@ -1197,6 +535,7 @@
 // }
 
 
+"use client";
 
 import { useState, useEffect } from "react";
 import { useWorkoutStore } from "../store/workout-store";
@@ -1206,25 +545,11 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
-import { Dumbbell, Edit, Trash, Plus, X } from "lucide-react";
+import { Plus, Trash, Edit, X } from "lucide-react";
 
 export function WorkoutManagement() {
   const navigate = useNavigate();
-  const [isAdding, setIsAdding] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    difficulty: "Easy",
-    duration: 30,
-    videoFile: null,
-    time: 0,
-    aim: "strength",
-    thumbnail: null,
-    calorie:20
-  });
-
-  const trainer = localStorage.getItem("trainer") && JSON.parse(localStorage.getItem("trainer"));
+  const trainer = JSON.parse(localStorage.getItem("trainer"));
   const trainerId = trainer?._id;
 
   const {
@@ -1237,11 +562,36 @@ export function WorkoutManagement() {
     deleteWorkout,
   } = useWorkoutStore();
 
+  const [isAdding, setIsAdding] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [previewThumbnail, setPreviewThumbnail] = useState(null);
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem("draftWorkoutForm");
+    return saved
+      ? JSON.parse(saved)
+      : {
+          title: "",
+          description: "",
+          difficulty: "Easy",
+          duration: 30,
+          aim: "strength",
+          calorie: 20,
+          time: 0,
+          videoFile: null,
+          thumbnail: null,
+          sections: [],
+        };
+  });
+
+  useEffect(() => {
+    localStorage.setItem("draftWorkoutForm", JSON.stringify(formData));
+  }, [formData]);
+
   useEffect(() => {
     if (trainerId) {
       fetchWorkouts();
     }
-  }, [fetchWorkouts, trainerId]);
+  }, [trainerId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -1249,338 +599,234 @@ export function WorkoutManagement() {
   };
 
   const handleFileChange = (e, field) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.files[0] }));
-  };
+    const file = e.target.files[0];
+    setFormData((prev) => ({ ...prev, [field]: file }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!trainerId) {
-      console.error("No trainer ID found - user might not be logged in");
-      return;
-    }
-
-    try {
-      const workoutData = new FormData();
-
-      workoutData.append("title", formData.title);
-      workoutData.append("description", formData.description);
-      workoutData.append("difficulty", formData.difficulty);
-      workoutData.append("duration", formData.duration.toString());
-      workoutData.append("aim", formData.aim);
-      workoutData.append("calorie", formData.calorie);
-      workoutData.append("trainer", trainerId);
-
-      if (formData.time) workoutData.append("time", formData.time.toString());
-      if (formData.videoFile) workoutData.append("video", formData.videoFile);
-      if (formData.thumbnail) workoutData.append("thumbnail", formData.thumbnail);
-
-      if (editingId) {
-        await updateWorkout(editingId, workoutData);
-      } else {
-        await addWorkout(workoutData);
-      }
-
-      resetForm();
-    } catch (error) {
-      console.error("Error submitting workout:", error);
+    if (field === "thumbnail" && file) {
+      const reader = new FileReader();
+      reader.onload = (event) => setPreviewThumbnail(event.target.result);
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleEdit = (workout) => {
-    setIsAdding(true);
-    setEditingId(workout._id);
-    setFormData({
-      title: workout.title || "",
-      description: workout.description || "",
-      difficulty: workout.difficulty || "Easy",
-      duration: workout.duration || 30,
-      videoFile: null,
-      time: workout.time || 0,
-      aim: workout.aim || "strength",
-      thumbnail: null,
-    });
+  const handleSectionChange = (index, field, value) => {
+    const updatedSections = [...formData.sections];
+    updatedSections[index][field] = value;
+    setFormData((prev) => ({ ...prev, sections: updatedSections }));
+  };
+
+  const handleExerciseChange = (sectionIndex, exerciseIndex, field, value) => {
+    const updatedSections = [...formData.sections];
+    updatedSections[sectionIndex].exercises[exerciseIndex][field] = value;
+    setFormData((prev) => ({ ...prev, sections: updatedSections }));
+  };
+
+  const addSection = () => {
+    setFormData((prev) => ({
+      ...prev,
+      sections: [...prev.sections, { title: "", description: "", exercises: [] }]
+    }));
+  };
+
+  const addExercise = (sectionIndex) => {
+    const updatedSections = [...formData.sections];
+    updatedSections[sectionIndex].exercises.push({ name: "", duration: "", thumbnail: "" });
+    setFormData((prev) => ({ ...prev, sections: updatedSections }));
+  };
+
+  const removeSection = (index) => {
+    const updatedSections = [...formData.sections];
+    updatedSections.splice(index, 1);
+    setFormData((prev) => ({ ...prev, sections: updatedSections }));
+  };
+
+  const removeExercise = (sectionIndex, exerciseIndex) => {
+    const updatedSections = [...formData.sections];
+    updatedSections[sectionIndex].exercises.splice(exerciseIndex, 1);
+    setFormData((prev) => ({ ...prev, sections: updatedSections }));
   };
 
   const resetForm = () => {
-    setIsAdding(false);
     setEditingId(null);
+    setPreviewThumbnail(null);
     setFormData({
       title: "",
       description: "",
       difficulty: "Easy",
       duration: 30,
-      videoFile: null,
-      time: 0,
       aim: "strength",
+      calorie: 20,
+      time: 0,
+      videoFile: null,
       thumbnail: null,
+      sections: [],
     });
+    localStorage.removeItem("draftWorkoutForm");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!trainerId) return alert("Trainer not logged in");
+
+    const workoutData = new FormData();
+    workoutData.append("title", formData.title);
+    workoutData.append("description", formData.description);
+    workoutData.append("difficulty", formData.difficulty);
+    workoutData.append("duration", formData.duration);
+    workoutData.append("aim", formData.aim);
+    workoutData.append("calorie", formData.calorie);
+    workoutData.append("time", formData.time);
+    workoutData.append("trainer", trainerId);
+
+    if (formData.videoFile) workoutData.append("video", formData.videoFile);
+    if (formData.thumbnail) workoutData.append("thumbnail", formData.thumbnail);
+    workoutData.append("sections", JSON.stringify(formData.sections));
+
+    try {
+      if (editingId) {
+        await updateWorkout(editingId, workoutData);
+      } else {
+        await addWorkout(workoutData);
+      }
+      setIsAdding(false);
+      resetForm();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (!trainerId) {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
-        <p className="text-gray-600 mb-4">
-          You need to be logged in as a trainer to manage workouts.
-        </p>
-        <Button
-          onClick={() => navigate("/trainer/login")}
-          className="bg-[#00A8FF] hover:bg-[#0096E6]"
-        >
-          Go to Login
-        </Button>
+      <div className="h-screen flex flex-col justify-center items-center">
+        <h1 className="text-xl font-bold">Access Denied</h1>
+        <Button onClick={() => navigate("/trainer/login")}>Go to Trainer Login</Button>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Workout Management</h1>
-        <Button
-          onClick={() => {
-            setIsAdding(true);
-            setEditingId(null);
-            setFormData({
-              title: "",
-              description: "",
-              difficulty: "Easy",
-              duration: 30,
-              videoFile: null,
-              time: 0,
-              aim: "strength",
-              thumbnail: null,
-            });
-          }}
-          className="bg-[#00A8FF] hover:bg-[#0096E6]"
-          disabled={workoutLoading}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add Workout
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Manage Workouts</h1>
+        <Button onClick={() => { resetForm(); setIsAdding(true); }}>
+          <Plus className="mr-2" /> Add Workout
         </Button>
       </div>
 
-      {error && (
-        <div className="rounded-md bg-red-100 p-4 text-red-700">
-          {error}
-        </div>
-      )}
-
       {isAdding && (
-        <Card className="p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">
-              {editingId ? "Edit Workout" : "Add New Workout"}
-            </h2>
-            <Button variant="ghost" size="icon" onClick={resetForm} disabled={workoutLoading}>
-              <X className="h-4 w-4" />
-            </Button>
+        <Card className="p-6 space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold">{editingId ? "Edit Workout" : "New Workout"}</h2>
+            <Button variant="ghost" onClick={() => setIsAdding(false)}><X /></Button>
           </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="title">Title <span className="text-red-500">*</span></Label>
-              <Input
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                required
-                disabled={workoutLoading}
-              />
-            </div>
-            <div>
-              <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={3}
-                required
-                disabled={workoutLoading}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Form fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="difficulty">Difficulty</Label>
-                <select
-                  id="difficulty"
-                  name="difficulty"
-                  value={formData.difficulty}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 p-2"
-                  disabled={workoutLoading}
-                >
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
-                </select>
+                <Label htmlFor="title">Workout Title</Label>
+                <Input id="title" name="title" value={formData.title} onChange={handleInputChange} required />
               </div>
               <div>
-                <Label htmlFor="duration">Duration (minutes)</Label>
-                <Input
-                  id="duration"
-                  name="duration"
-                  type="number"
-                  min="1"
-                  value={formData.duration}
-                  onChange={handleInputChange}
-                  required
-                  disabled={workoutLoading}
-                />
+                <Label htmlFor="duration">Duration (Minutes)</Label>
+                <Input id="duration" name="duration" type="number" value={formData.duration} onChange={handleInputChange} required />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="description">Workout Description</Label>
+              <Textarea id="description" name="description" value={formData.description} onChange={handleInputChange} required />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="videoFile">Video Upload</Label>
-                <Input
-                  id="videoFile"
-                  name="videoFile"
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => handleFileChange(e, "videoFile")}
-                  disabled={workoutLoading}
-                />
-                {formData.videoFile && (
-                  <p className="text-xs text-muted-foreground">
-                    Selected: {formData.videoFile.name}
-                  </p>
+                <Label htmlFor="calorie">Calories Burned</Label>
+                <Input id="calorie" name="calorie" type="number" value={formData.calorie} onChange={handleInputChange} />
+              </div>
+              <div>
+                <Label htmlFor="time">Workout Time (Hours)</Label>
+                <Input id="time" name="time" type="number" value={formData.time} onChange={handleInputChange} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="video">Workout Video Upload</Label>
+                <Input id="video" type="file" onChange={(e) => handleFileChange(e, "videoFile")} accept="video/*" />
+              </div>
+              <div>
+                <Label htmlFor="thumbnail">Workout Thumbnail Upload</Label>
+                <Input id="thumbnail" type="file" onChange={(e) => handleFileChange(e, "thumbnail")} accept="image/*" />
+                {previewThumbnail && (
+                  <img src={previewThumbnail} alt="Thumbnail Preview" className="w-24 h-24 object-cover rounded mt-2" />
                 )}
               </div>
-
-              <div>
-                <Label htmlFor="time">Time (minutes)</Label>
-                <Input
-                  id="time"
-                  name="time"
-                  type="number"
-                  min="0"
-                  value={formData.time}
-                  onChange={handleInputChange}
-                  disabled={workoutLoading}
-                />
-              </div>
-
-              <div>
-              <Label htmlFor="calorie">Calorie Burn </Label>
-                <Input
-                  id="calorie"
-                  name="calorie"
-                  type="calorie"
-                  min="20"
-                  value={formData.calorie}
-                  onChange={handleInputChange}
-                  disabled={workoutLoading}
-                />
-              </div>
-            </div>
-    
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="aim">Aim</Label>
-                <select
-                  id="aim"
-                  name="aim"
-                  value={formData.aim}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 p-2"
-                  disabled={workoutLoading}
-                >
-                  <option value="strength">Strength</option>
-                  <option value="cardio">Cardio</option>
-                  <option value="flexibility">Flexibility</option>
-                </select>
-              </div>
-
-              <div>
-                <Label htmlFor="thumbnail">Thumbnail</Label>
-                <Input
-                  id="thumbnail"
-                  name="thumbnail"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, "thumbnail")}
-                  disabled={workoutLoading}
-                />
-              </div>
             </div>
 
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                className="bg-[#00A8FF] hover:bg-[#0096E6]"
-                disabled={workoutLoading}
-              >
-                {workoutLoading ? "Processing..." : editingId ? "Update Workout" : "Add Workout"}
-              </Button>
+            {/* Sections & Exercises */}
+            <div className="space-y-6">
+              {formData.sections.map((section, sectionIdx) => (
+                <div key={sectionIdx} className="p-4 bg-gray-100 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold">Section {sectionIdx + 1}</h3>
+                    <Button variant="destructive" onClick={() => removeSection(sectionIdx)}>Remove</Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Section Title</Label>
+                    <Input value={section.title} onChange={(e) => handleSectionChange(sectionIdx, "title", e.target.value)} />
+
+                    <Label>Section Description</Label>
+                    <Textarea value={section.description} onChange={(e) => handleSectionChange(sectionIdx, "description", e.target.value)} />
+
+                    {section.exercises.map((exercise, exIdx) => (
+                      <div key={exIdx} className="space-y-2">
+                        <Label>Exercise Name</Label>
+                        <Input value={exercise.name} onChange={(e) => handleExerciseChange(sectionIdx, exIdx, "name", e.target.value)} />
+
+                        <Label>Exercise Duration</Label>
+                        <Input value={exercise.duration} onChange={(e) => handleExerciseChange(sectionIdx, exIdx, "duration", e.target.value)} />
+
+                        <Label>Exercise Thumbnail URL</Label>
+                        <Input value={exercise.thumbnail} onChange={(e) => handleExerciseChange(sectionIdx, exIdx, "thumbnail", e.target.value)} />
+
+                        <Button variant="destructive" size="sm" onClick={() => removeExercise(sectionIdx, exIdx)}>Remove Exercise</Button>
+                      </div>
+                    ))}
+                    <Button size="sm" onClick={() => addExercise(sectionIdx)}>Add Exercise</Button>
+                  </div>
+                </div>
+              ))}
+              <Button variant="secondary" onClick={addSection}>Add Section</Button>
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <Button type="submit" disabled={workoutLoading}>{editingId ? "Update Workout" : "Create Workout"}</Button>
             </div>
           </form>
         </Card>
       )}
 
-      {workoutLoading && !isAdding ? (
-        <div className="flex justify-center">
-          <p>Loading workouts...</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Workouts */}
+      {!isAdding && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {workouts.length > 0 ? (
             workouts.map((workout) => (
               <Card key={workout._id} className="p-6">
-                <div className="mb-4 flex items-center">
-                  <div className="rounded-full bg-blue-100 p-2 text-blue-600">
-                    <Dumbbell className="h-5 w-5" />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-semibold">{workout.title}</h3>
-                    <p className="text-sm text-gray-500">{workout.aim}</p>
-                  </div>
-                  <div className="ml-auto flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(workout)}
-                      className="text-blue-600 hover:text-blue-800"
-                      disabled={workoutLoading}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => deleteWorkout(workout._id)}
-                      className="text-red-600 hover:text-red-800"
-                      disabled={workoutLoading}
-                    >
-                      <Trash className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-                <p className="mb-3 text-sm text-gray-600">{workout.description}</p>
-                {workout.thumbnail && (
-                  <img
-                    src={workout.thumbnail}
-                    alt={workout.title}
-                    className="mb-3 h-32 w-full object-cover rounded-md"
-                  />
-                )}
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`rounded-full px-2 py-1 text-xs ${
-                      workout.difficulty === "Easy"
-                        ? "bg-green-100 text-green-600"
-                        : workout.difficulty === "Medium"
-                        ? "bg-yellow-100 text-yellow-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {workout.difficulty}
-                  </span>
-                  <span className="text-sm text-gray-600">{workout.duration} min</span>
+                <h3 className="text-lg font-bold mb-2">{workout.title}</h3>
+                <p className="text-gray-600 mb-4">{workout.description}</p>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => { resetForm(); setIsAdding(true); setEditingId(workout._id); setFormData({...workout, sections: workout.sections || []}) }}>
+                    <Edit className="mr-2" /> Edit
+                  </Button>
+                  <Button variant="destructive" onClick={() => deleteWorkout(workout._id)}>
+                    <Trash className="mr-2" /> Delete
+                  </Button>
                 </div>
               </Card>
             ))
           ) : (
-            <p className="text-gray-500">No workouts available. Create your first workout!</p>
+            <p className="text-center text-gray-500">No workouts created yet.</p>
           )}
         </div>
       )}

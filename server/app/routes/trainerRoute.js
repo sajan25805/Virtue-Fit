@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.post('/', upload.single('profilePicture'), registerTrainer);
 router.post('/login', loginTrainer);
+router.post("/logout", logoutTrainer);
+
 
 router.get('/', getTrainers);
 router.get('/:id', getTrainerById);

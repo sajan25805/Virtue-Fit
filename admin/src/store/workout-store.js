@@ -1,10 +1,7 @@
-
-
-
 import { create } from "zustand";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8000/api"; // Update to match your backend
+axios.defaults.baseURL = "http://localhost:8000/api";
 
 export const useWorkoutStore = create((set) => ({
   workouts: [],
@@ -23,53 +20,39 @@ export const useWorkoutStore = create((set) => ({
       });
     }
   },
-  
-
 
   addWorkout: async (formData) => {
     set({ loading: true });
     try {
       const response = await axios.post("/workouts", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
-      
       set((state) => ({
         workouts: [...state.workouts, response.data],
-        loading: false
+        loading: false,
       }));
       return response.data;
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || "Failed to add workout",
-        loading: false 
-      });
+      set({ error: error.response?.data?.message || "Failed to add workout", loading: false });
       throw error;
     }
   },
-  
+
   updateWorkout: async (id, formData) => {
     set({ loading: true });
     try {
       const response = await axios.put(`/workouts/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
-  
       set((state) => ({
-        workouts: state.workouts.map((w) => 
-          w._id === id ? response.data : w
-        ),
-        loading: false
+        workouts: state.workouts.map((w) => (w._id === id ? response.data : w)),
+        loading: false,
       }));
       return response.data;
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || "Failed to update workout",
-        loading: false 
-      });
+      set({ error: error.response?.data?.message || "Failed to update workout", loading: false });
       throw error;
     }
   },
@@ -77,16 +60,24 @@ export const useWorkoutStore = create((set) => ({
   deleteWorkout: async (id) => {
     set({ loading: true });
     try {
-      await axios.delete(`/workouts/${id}`);
+      await axios.delete(`/workouts/${id}`, { withCredentials: true });
       set((state) => ({
         workouts: state.workouts.filter((w) => w._id !== id),
-        loading: false
+        loading: false,
       }));
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || "Failed to delete workout",
-        loading: false 
-      });
+      set({ error: error.response?.data?.message || "Failed to delete workout", loading: false });
+      throw error;
+    }
+  },
+
+  rateWorkout: async (workoutId, rating) => {
+    set({ loading: true });
+    try {
+      await axios.patch(`/workouts/rate/${workoutId}`, { rating }, { withCredentials: true });
+      set({ loading: false });
+    } catch (error) {
+      set({ error: error.response?.data?.message || "Failed to rate workout", loading: false });
       throw error;
     }
   },

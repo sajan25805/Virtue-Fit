@@ -1,293 +1,37 @@
-// // import { Workout } from "../models/Workout.js";
-
-// // // Create Workout
-// // export const createWorkout = async (req, res) => {
-// //   try {
-// //     const workout = new Workout(req.body);
-// //     await workout.save();
-// //     res.status(201).json({
-// //       success: true,
-// //       message: "Workout created successfully",
-// //       workout: { ...workout._doc },
-// //     });
-// //   } catch (error) {
-// //     res.status(400).json({
-// //       success: false,
-// //       message: error.message,
-// //     });
-// //   }
-// // };
-
-// // // Get All Workouts
-// // export const getAllWorkouts = async (req, res) => {
-// //   try {
-// //     const workouts = await Workout.find().populate("trainer");
-// //     res.status(200).json({
-// //       success: true,
-// //       message: "Workouts fetched successfully",
-// //       workouts,
-// //     });
-// //   } catch (error) {
-// //     res.status(500).json({
-// //       success: false,
-// //       message: error.message,
-// //     });
-// //   }
-// // };
-
-// // // Get Workouts by Trainer ID
-// // export const getWorkoutsByTrainer = async (req, res) => {
-// //   try {
-// //     const workouts = await Workout.find({ trainer: req.params.trainerId }).populate("trainer");
-// //     res.status(200).json({
-// //       success: true,
-// //       message: "Workouts by trainer fetched successfully",
-// //       workouts,
-// //     });
-// //   } catch (error) {
-// //     res.status(500).json({
-// //       success: false,
-// //       message: error.message,
-// //     });
-// //   }
-// // };
-
-// // // Get Workout by ID
-// // export const getWorkoutById = async (req, res) => {
-// //   try {
-// //     const workout = await Workout.findById(req.params.id).populate("trainer");
-// //     if (!workout) {
-// //       return res.status(404).json({
-// //         success: false,
-// //         message: "Workout not found",
-// //       });
-// //     }
-// //     res.status(200).json({
-// //       success: true,
-// //       message: "Workout fetched successfully",
-// //       workout,
-// //     });
-// //   } catch (error) {
-// //     res.status(500).json({
-// //       success: false,
-// //       message: error.message,
-// //     });
-// //   }
-// // };
-
-// // // Update Workout
-// // export const updateWorkout = async (req, res) => {
-// //   try {
-// //     const workout = await Workout.findByIdAndUpdate(req.params.id, req.body, { new: true });
-// //     if (!workout) {
-// //       return res.status(404).json({
-// //         success: false,
-// //         message: "Workout not found",
-// //       });
-// //     }
-// //     res.status(200).json({
-// //       success: true,
-// //       message: "Workout updated successfully",
-// //       workout,
-// //     });
-// //   } catch (error) {
-// //     res.status(400).json({
-// //       success: false,
-// //       message: error.message,
-// //     });
-// //   }
-// // };
-
-// // // Delete Workout
-// // export const deleteWorkout = async (req, res) => {
-// //   try {
-// //     const workout = await Workout.findByIdAndDelete(req.params.id);
-// //     if (!workout) {
-// //       return res.status(404).json({
-// //         success: false,
-// //         message: "Workout not found",
-// //       });
-// //     }
-// //     res.status(200).json({
-// //       success: true,
-// //       message: "Workout deleted successfully",
-// //     });
-// //   } catch (error) {
-// //     res.status(500).json({
-// //       success: false,
-// //       message: error.message,
-// //     });
-// //   }
-// // };
-
-
-// import { Workout } from '../models/Workout.js';
-
-// // Create Workout
-// export const createWorkout = async (req, res) => {
-//   try {
-//     const { videoUrl, thumbnail } = req.files;  // Destructure the files
-//     const workoutData = {
-//       ...req.body,  // All other form data like name, description, etc.
-//       videoUrl: videoUrl[0].path,  // Save video file path
-//       thumbnail: thumbnail[0].path,  // Save thumbnail file path
-//     };
-
-//     const workout = new Workout(workoutData);
-//     await workout.save();
-//     res.status(201).json({
-//       success: true,
-//       message: 'Workout created successfully',
-//       workout: { ...workout._doc },
-//     });
-//   } catch (error) {
-//     res.status(400).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// // Get All Workouts
-// export const getAllWorkouts = async (req, res) => {
-//   try {
-//     const workouts = await Workout.find().populate('trainer');
-//     res.status(200).json({
-//       success: true,
-//       message: 'Workouts fetched successfully',
-//       workouts,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// // Get Workouts by Trainer ID
-// export const getWorkoutsByTrainer = async (req, res) => {
-//   try {
-//     const workouts = await Workout.find({ trainer: req.params.trainerId }).populate('trainer');
-//     res.status(200).json({
-//       success: true,
-//       message: 'Workouts by trainer fetched successfully',
-//       workouts,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// // Get Workout by ID
-// export const getWorkoutById = async (req, res) => {
-//   try {
-//     const workout = await Workout.findById(req.params.id).populate('trainer');
-//     if (!workout) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Workout not found',
-//       });
-//     }
-//     res.status(200).json({
-//       success: true,
-//       message: 'Workout fetched successfully',
-//       workout,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// // Update Workout
-// export const updateWorkout = async (req, res) => {
-//   try {
-//     const { videoUrl, thumbnail } = req.files;
-//     const workoutData = {
-//       ...req.body,
-//       ...(videoUrl && { videoUrl: videoUrl[0].path }),
-//       ...(thumbnail && { thumbnail: thumbnail[0].path }),
-//     };
-
-//     const workout = await Workout.findByIdAndUpdate(req.params.id, workoutData, { new: true });
-//     if (!workout) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Workout not found',
-//       });
-//     }
-//     res.status(200).json({
-//       success: true,
-//       message: 'Workout updated successfully',
-//       workout,
-//     });
-//   } catch (error) {
-//     res.status(400).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-// // Delete Workout
-// export const deleteWorkout = async (req, res) => {
-//   try {
-//     const workout = await Workout.findByIdAndDelete(req.params.id);
-//     if (!workout) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Workout not found',
-//       });
-//     }
-//     res.status(200).json({
-//       success: true,
-//       message: 'Workout deleted successfully',
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
-
-
-
-
-import { Workout } from '../models/Workout.js'
+import { Workout } from '../models/Workout.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
 import fs from 'fs';
 
+// Helper to safely upload
+async function safeUpload(file, type) {
+  try {
+    const result = await uploadToCloudinary(file, type);
+    fs.unlinkSync(file);
+    return result;
+  } catch (error) {
+    console.error(`Cloudinary Upload Error:`, error);
+    return "";
+  }
+}
+
+// Create Workout
 export const createWorkout = async (req, res) => {
   try {
-    const { files } = req;
-    let videoUrl = '';
-    let thumbnailUrl = '';
+    const { sections } = req.body;
 
-    if (files?.video) {
-      videoUrl = await uploadToCloudinary(files.video[0].path, 'video');
-      fs.unlinkSync(files.video[0].path);
+    let videoUrl = "";
+    let thumbnailUrl = "";
+
+    if (req.files?.video) {
+      videoUrl = await safeUpload(req.files.video[0].path, 'video');
+    }
+    if (req.files?.thumbnail) {
+      thumbnailUrl = await safeUpload(req.files.thumbnail[0].path, 'image');
     }
 
-    if (files?.thumbnail) {
-      thumbnailUrl = await uploadToCloudinary(files.thumbnail[0].path, 'image');
-      fs.unlinkSync(files.thumbnail[0].path);
-    }
-
-        // Make sure trainer ID is included in the request body
-        if (!req.body.trainer) {
-          return res.status(400).json({ message: "Trainer ID is required" });
-        }
-        
     const workout = new Workout({
       ...req.body,
+      sections: sections ? JSON.parse(sections) : [],
       videoUrl,
       thumbnail: thumbnailUrl
     });
@@ -299,13 +43,175 @@ export const createWorkout = async (req, res) => {
   }
 };
 
+// Get Workout by ID
+export const getWorkoutById = async (req, res) => {
+  try {
+    const workout = await Workout.findById(req.params.id).populate('trainer', 'name profilePicture specialization');
+    if (!workout) return res.status(404).json({ message: "Workout not found" });
 
-export const rateWorkout = async (req, res) => {
-  const { workoutId } = req.params;
-  const { rating } = req.body;
-  const userId = req.userId; // From protect middleware
+    res.status(200).json(workout);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get All Workouts
+export const getWorkouts = async (req, res) => {
+  try {
+    const workouts = await Workout.find({}).populate('trainer', 'name profilePicture');
+    res.status(200).json(workouts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update Workout
+export const updateWorkout = async (req, res) => {
+  try {
+    const { sections } = req.body;
+    const updates = { ...req.body };
+
+    if (req.files?.video) {
+      updates.videoUrl = await safeUpload(req.files.video[0].path, 'video');
+    }
+
+    if (req.files?.thumbnail) {
+      updates.thumbnail = await safeUpload(req.files.thumbnail[0].path, 'image');
+    }
+
+    if (sections) {
+      updates.sections = JSON.parse(sections);
+    }
+
+    const workout = await Workout.findByIdAndUpdate(req.params.id, updates, { new: true });
+    if (!workout) return res.status(404).json({ message: "Workout not found" });
+
+    res.status(200).json(workout);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Delete Workout
+export const deleteWorkout = async (req, res) => {
+  try {
+    const workout = await Workout.findByIdAndDelete(req.params.id);
+    if (!workout) return res.status(404).json({ message: "Workout not found" });
+
+    res.status(200).json({ message: "Workout deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+//Review Workout
+export const addWorkoutReview = async (req, res) => {
+  const { id } = req.params;
+  const { comment, rating } = req.body;
+  const userId = req.userId;
 
   try {
+    const workout = await Workout.findById(id);
+    if (!workout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    const alreadyReviewed = workout.reviews.find(
+      (review) => review.user.toString() === userId
+    );
+    if (alreadyReviewed) {
+      return res.status(400).json({ message: "You have already reviewed this workout" });
+    }
+
+    const review = {
+      user: userId,
+      comment,
+      rating
+    };
+
+    workout.reviews.push(review);
+    workout.ratings.push({ user: userId, rating }); // Optional sync with ratings array
+
+    await workout.save();
+    res.status(201).json({ success: true, message: "Review added", review });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export const updateWorkoutReview = async (req, res) => {
+  const { id, reviewId } = req.params;
+  const { comment, rating } = req.body;
+  const userId = req.userId;
+
+  try {
+    const workout = await Workout.findById(id);
+    if (!workout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    const review = workout.reviews.id(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized action" });
+    }
+
+    review.comment = comment || review.comment;
+    review.rating = rating || review.rating;
+    review.createdAt = Date.now();
+
+    await workout.save();
+    res.status(200).json({ success: true, message: "Review updated", review });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+export const deleteWorkoutReview = async (req, res) => {
+  const { id, reviewId } = req.params;
+  const userId = req.userId;
+
+  try {
+    const workout = await Workout.findById(id);
+    if (!workout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    const review = workout.reviews.id(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized action" });
+    }
+
+    review.remove();
+    await workout.save();
+    res.status(200).json({ success: true, message: "Review deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
+
+// ⭐ RATE WORKOUT
+export const rateWorkout = async (req, res) => {
+  try {
+    const { workoutId } = req.params;
+    const { rating } = req.body;
+    const userId = req.userId;
+
     const workout = await Workout.findById(workoutId);
     if (!workout) {
       return res.status(404).json({ success: false, message: "Workout not found" });
@@ -321,81 +227,27 @@ export const rateWorkout = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Workout rated successfully" });
   } catch (error) {
-    console.error("Error rating workout:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 
-export const getWorkouts = async (req, res) => {
+export const getWorkoutReviews = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { difficulty, aim } = req.query;
-    const filter = {};
-    
-    if (difficulty) filter.difficulty = difficulty;
-    if (aim) filter.aim = aim;
-
-    const workouts = await Workout.find(filter).populate({
-      path: 'trainer',
-      select: 'name email specialization profilePicture' // Select fields you want
-    });
-
-    res.json(workouts);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const getWorkoutById = async (req, res) => {
-  try {
-    const workout = await Workout.findById(req.params.id).populate({
-      path: 'trainer',
-      select: 'name email specialization bio profilePicture' // Select fields you want
+    const workout = await Workout.findById(id).populate({
+      path: 'reviews.user',
+      select: 'name profilePicture' // include user info in the review
     });
 
     if (!workout) {
-      return res.status(404).json({ message: 'Workout not found' });
+      return res.status(404).json({ success: false, message: "Workout not found" });
     }
 
-    res.json(workout);
+    res.status(200).json({ success: true, reviews: workout.reviews });
   } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
-export const updateWorkout = async (req, res) => {
-  try {
-    const { files } = req;
-    const updates = { ...req.body };
-
-    if (files?.video) {
-      updates.videoUrl = await uploadToCloudinary(files.video[0].path, 'video');
-      fs.unlinkSync(files.video[0].path);
-    }
-
-    if (files?.thumbnail) {
-      updates.thumbnail = await uploadToCloudinary(files.thumbnail[0].path, 'image');
-      fs.unlinkSync(files.thumbnail[0].path);
-    }
-
-    const workout = await Workout.findByIdAndUpdate(req.params.id, updates, {
-      new: true
-    });
-
-    if (!workout) return res.status(404).json({ message: 'Workout not found' });
-    res.json(workout);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-export const deleteWorkout = async (req, res) => {
-  try {
-    const workout = await Workout.findByIdAndDelete(req.params.id);
-    if (!workout) return res.status(404).json({ message: 'Workout not found' });
-    res.json({ message: 'Workout removed' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching reviews:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
