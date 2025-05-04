@@ -4,9 +4,11 @@ import bcryptjs from "bcryptjs";
 import { generateVerificationCode, generateTokenAndSetCookie } from "../../utils/token.js"
 import { sendVerificationEmail, sendWelcomeEmail } from "../../mailtrap/email.js";
 import config from "../../config/config.js";
+import { uploadToCloudinary } from '../../config/cloudinary.js';
+import fs from 'fs';
 
 /**
- *
+ * 
  */
 
 
@@ -42,74 +44,70 @@ export const checkAuth = async(req,res) => {
 }
 
 export const signup = async (req, res) => {
-  try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      fitnessGoal,
-      experienceLevel,
-      height,
-      weight,
-      age,
-    } = req.body;
-
-
-    // User Already Exists
-    const userAlreadyExists = await User.findOne({
-      email
-    });
-
-    if (userAlreadyExists) {
-      return res.status(400).json({
-        success: false,
-        message: "User Already exists.",
-      });
-    }
-
-    const hashedPassword =await bcryptjs.hash(password,10);
-
-    const { verificationToken, verificationTokenExpiresAt }= generateVerificationCode();
-
-    
-
-    const user =  await User.create({
-        firstName,
-        lastName,
-        email,
-        password:hashedPassword,
-        fitnessGoal,
-        experienceLevel,
-        height,
-        weight,
-        age,
-        verificationToken,
-        verificationTokenExpiresAt
-      })
-
-      generateTokenAndSetCookie(res, user._id)
-
-      sendVerificationEmail(user.email, verificationToken);
-
-
-    return res.status(201).json({
-        success: true,
-        message: "User Created Successfully",
-        user: {
-          ...user._doc,
-          password: undefined,
-        }
-    })
-  } catch (error) {
-
-	console.log(error);
-    res.status(400).json({
-        success: false,
-        message: `Error: ${error.message}`
-    })
-  }
-};
+	try {
+	  const { file } = req;
+	  let profilePictureUrl = "";
+	  const {
+		firstName,
+		lastName,
+		email,
+		password,
+		fitnessGoal,
+		experienceLevel,
+		height,
+		weight,
+		age,
+	  } = req.body;
+  
+	  const userExists = await User.findOne({ email });
+	  if (userExists) {
+		return res.status(400).json({ success: false, message: "User already exists." });
+	  }
+  
+	  if (file) {
+		profilePictureUrl = await uploadToCloudinary(file.path, "image");
+		fs.unlinkSync(file.path);
+	  }
+  
+	  const hashedPassword = await bcryptjs.hash(password, 10);
+	  const { verificationToken, verificationTokenExpiresAt } = generateVerificationCode();
+  
+	  const user = await User.create({
+		firstName,
+		lastName,
+		email,
+		password: hashedPassword,
+		fitnessGoal,
+		experienceLevel,
+		height,
+		weight,
+		age,
+		profilePicture: profilePictureUrl,
+		verificationToken,
+		verificationTokenExpiresAt
+	  });
+  
+	  await sendVerificationEmail(email, verificationToken);
+	  generateTokenAndSetCookie(res, user._id);
+  
+	  return res.status(201).json({
+		success: true,
+		message: "User registered successfully. Please verify your email.",
+		user: {
+		  _id: user._id,
+		  email: user.email,
+		  firstName: user.firstName,
+		  lastName: user.lastName,
+		  profilePicture: user.profilePicture,
+		  isVerified: user.isVerified,
+		},
+	  });
+	} catch (error) {
+	  console.error("Signup Error:", error);
+	  res.status(500).json({ success: false, message: `Error: ${error.message}` });
+	}
+  };
+  
 
 
 export const resendVerificationEmail = async (req, res) => {
@@ -325,22 +323,33 @@ export const resetPassword = async (req, res) => {
 
 
 
-// PATCH /api/auth/update-profile
 export const updateProfile = async (req, res) => {
 	try {
+	  const { file } = req;
 	  const updates = { ...req.body };
-	  const user = await User.findByIdAndUpdate(req.userId, updates, { new: true });
+  
+	  if (file) {
+		updates.profilePicture = await uploadToCloudinary(file.path, "image");
+		fs.unlinkSync(file.path);
+	  }
+  
+	  const user = await User.findByIdAndUpdate(req.userId, updates, {
+		new: true
+	  }).select("-password");
+  
 	  if (!user) return res.status(404).json({ success: false, message: "User not found" });
   
 	  res.status(200).json({
 		success: true,
-		message: "Profile updated",
-		user: { ...user._doc, password: undefined }
+		message: "User profile updated",
+		user
 	  });
 	} catch (error) {
+	  console.error("Profile update error:", error);
 	  res.status(500).json({ success: false, message: error.message });
 	}
   };
+  
   
   // DELETE /api/auth/delete-account
   export const deleteAccount = async (req, res) => {
@@ -352,6 +361,34 @@ export const updateProfile = async (req, res) => {
 	  res.status(200).json({ success: true, message: "Account deleted" });
 	} catch (error) {
 	  res.status(500).json({ success: false, message: error.message });
+	}
+  };
+
+// PATCH /api/auth/change-password
+export const updatePassword = async (req, res) => {
+	try {
+	  const { currentPassword, newPassword } = req.body;
+  
+	  if (!currentPassword || !newPassword) {
+		return res.status(400).json({ success: false, message: "Both current and new passwords are required" });
+	  }
+  
+	  const user = await User.findById(req.userId);
+	  if (!user) return res.status(404).json({ success: false, message: "User not found" });
+  
+	  const isMatch = await bcryptjs.compare(currentPassword, user.password);
+	  if (!isMatch) {
+		return res.status(401).json({ success: false, message: "Incorrect current password" });
+	  }
+  
+	  const hashed = await bcryptjs.hash(newPassword, 10);
+	  user.password = hashed;
+	  await user.save();
+  
+	  res.status(200).json({ success: true, message: "Password updated successfully" });
+	} catch (err) {
+	  console.error("Error updating password:", err);
+	  res.status(500).json({ success: false, message: "Something went wrong" });
 	}
   };
   

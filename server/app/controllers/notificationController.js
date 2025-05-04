@@ -2,15 +2,17 @@ import { Notification } from "../models/Notification.js";
 
 export const createNotification = async (req, res) => {
   try {
-    const { userId, title, message, type, link } = req.body;
+
+    const { title, message, type, link } = req.body;
 
     const notification = await Notification.create({
-      user: userId,
+      user: req.userId, 
       title,
       message,
       type,
       link
     });
+    
 
     res.status(201).json({ success: true, message: "Notification created", notification });
   } catch (error) {

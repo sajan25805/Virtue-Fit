@@ -7,18 +7,19 @@ import { workoutRoute } from "./routes/workoutRoute.js";
 import { trainerRoute } from "./routes/trainerRoute.js";
 import notificationRoute from "./routes/notificationRoutes.js"
 import workoutProgressRoute from "./routes/workoutProgressRoutes.js"
-
-
-
+import programRoute from "./routes/programRoute.js"
+import plannerRoute from "./routes/PlannerRoute.js"
 const router = Router();
 
 
 router.use("/auth",authRoutes);
 router.use("/workouts",workoutRoute);
+router.use("/programs",programRoute);
 router.use("/trainers",trainerRoute);
 router.use("/meals",mealRoute);
 router.use("/snacks",snackRoute);
 router.use("/meditations",meditationRoute);
+router.use("/planners",plannerRoute);
 router.use("/notifications",notificationRoute);
 router.use("/workout-progress",workoutProgressRoute);
 
