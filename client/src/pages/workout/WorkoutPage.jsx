@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,7 +8,7 @@ const WorkoutPage = () => {
   const [workouts, setWorkouts] = useState([]);
   const [progressList, setProgressList] = useState([]);
   const [filter, setFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all"); // NEW
+  const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,21 +16,17 @@ const WorkoutPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
         const [workoutsRes, progressRes] = await Promise.all([
           fetch("http://localhost:8000/api/workouts"),
           fetch("http://localhost:8000/api/workout-progress/user", {
             credentials: "include",
           }),
         ]);
-
         if (!workoutsRes.ok || !progressRes.ok) {
           throw new Error("Failed to fetch workouts or progress");
         }
-
         const workoutsData = await workoutsRes.json();
         const progressData = await progressRes.json();
-
         setWorkouts(workoutsData);
         setProgressList(progressData.progress);
       } catch (err) {
@@ -42,12 +36,13 @@ const WorkoutPage = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   const getWorkoutStatus = (workoutId) => {
-    const progress = progressList.find((p) => p.workout === workoutId);
+    const progress = progressList.find(
+      (p) => p.workout === workoutId || p.workout?._id === workoutId
+    );
     if (progress) {
       return progress.isCompleted ? "completed" : "in-progress";
     }
@@ -67,7 +62,6 @@ const WorkoutPage = () => {
     }
   };
 
-  // Filter by Category + Status
   const filteredWorkouts = workouts
     .filter((workout) => {
       if (filter === "all") return true;
@@ -75,8 +69,7 @@ const WorkoutPage = () => {
     })
     .filter((workout) => {
       const status = getWorkoutStatus(workout._id);
-      if (statusFilter === "all") return true;
-      return statusFilter === status;
+      return statusFilter === "all" || statusFilter.toLowerCase() === status.toLowerCase();
     })
     .sort((a, b) => {
       const statusA = getWorkoutStatus(a._id);
@@ -89,13 +82,11 @@ const WorkoutPage = () => {
   return (
     <div className="bg-[#F7F7FD] min-h-screen py-8 px-4 md:px-8">
       <div className="container mx-auto">
-        {/* Header */}
         <div className="bg-gradient-to-r from-[#0E0E2C] to-[#00A8FF] rounded-lg p-6 mb-8 text-white">
           <h1 className="text-2xl md:text-3xl font-bold">Workouts</h1>
           <p className="mt-2">Find the perfect workout for your fitness journey</p>
         </div>
 
-        {/* Filter Buttons */}
         <div className="flex flex-wrap gap-4 mb-6 justify-center">
           {["all", "strength", "cardio", "flexibility"].map((category) => (
             <button
@@ -112,7 +103,6 @@ const WorkoutPage = () => {
           ))}
         </div>
 
-        {/* Status Filter Buttons */}
         <div className="flex flex-wrap gap-4 mb-8 justify-center">
           {["all", "in-progress", "completed"].map((status) => (
             <button
@@ -129,21 +119,18 @@ const WorkoutPage = () => {
           ))}
         </div>
 
-        {/* Loading */}
         {loading && (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00A8FF]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00A8FF]" />
           </div>
         )}
 
-        {/* Error */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
             <span className="block sm:inline">{error}</span>
           </div>
         )}
 
-        {/* Workout Cards */}
         {!loading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredWorkouts.map((workout) => {
@@ -163,15 +150,11 @@ const WorkoutPage = () => {
                     <div className="absolute top-2 left-2 bg-[#00A8FF] text-white text-xs font-bold px-2 py-1 rounded-full">
                       {workout.aim}
                     </div>
-
-                    {/* Difficulty badge */}
                     <div
                       className={`absolute top-2 right-2 ${getDifficultyColor(workout.difficulty)} text-white text-xs font-bold px-2 py-1 rounded-full`}
                     >
                       {workout.difficulty}
                     </div>
-
-                    {/* Progress badge */}
                     {status === "completed" && (
                       <div className="absolute bottom-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                         Completed ✅
@@ -208,7 +191,6 @@ const WorkoutPage = () => {
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && !error && filteredWorkouts.length === 0 && (
           <div className="bg-white rounded-lg shadow-md p-8 text-center border border-[#ECECEE]">
             <h3 className="text-xl font-semibold text-[#0E0E2C] mb-2">No workouts found</h3>

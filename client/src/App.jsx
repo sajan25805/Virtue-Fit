@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useAuthStore } from "./store/authStore";
+import NotificationPage from "./pages/NotificationsPage";
 
 // Layouts
 import AppLayout from "./layouts/AppLayout";
@@ -20,7 +21,11 @@ import MealDetailPage from "./pages/mealsSnacks/MealDetailPage";
 import SnackPage from "./pages/mealsSnacks/SnackPage";
 import SnackDetailPage from "./pages/mealsSnacks/SnackDetailPage";
 import ErrorPage from "./pages/ErrorPage";
-
+import SettingsPage from "./pages/Setting";
+import ProgramPage from "./pages/program/ProgramPage";
+import ProgramDetailPage from "./pages/program/ProgramDetailPage";
+import PlannerPage from "./pages/planner/PlannerPage";
+import Help from "./pages/Help";
 // ✅ Protected route wrapper
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -87,6 +92,56 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SnackDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "settings",
+        element: (
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "notifications",
+        element: (
+          <ProtectedRoute>
+            <NotificationPage />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "program",
+        element: (
+          <ProtectedRoute>
+            <ProgramPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "program/:id",
+        element: (
+          <ProtectedRoute>
+            <ProgramDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "planner",
+        element: (
+          <ProtectedRoute>
+            <PlannerPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/help",
+        element: (
+          <ProtectedRoute>
+            <Help />
           </ProtectedRoute>
         ),
       },
