@@ -106,3 +106,29 @@ export const getUserProgramProgress = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// ✅ Update a program (Trainer only)
+export const updateProgram = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await Program.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updated) return res.status(404).json({ success: false, message: "Program not found" });
+
+    res.status(200).json({ success: true, program: updated });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ✅ Delete a program (Trainer only)
+export const deleteProgram = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Program.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ success: false, message: "Program not found" });
+
+    res.status(200).json({ success: true, message: "Program deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

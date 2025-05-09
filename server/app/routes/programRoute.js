@@ -5,7 +5,9 @@ import {
   getProgramById,
   enrollInProgram,
   markProgramItemComplete,
-  getUserProgramProgress
+  getUserProgramProgress,
+  updateProgram,
+  deleteProgram
 } from "../controllers/program.js";
 
 import { protect } from "../middleware/authMiddleware.js";
@@ -23,6 +25,9 @@ router.get("/:programId/progress", protect, getUserProgramProgress);
 
 // ✅ Trainer Only
 router.post("/", protect, createProgram);
+router.patch("/:id", protect, updateProgram);     
+router.delete("/:id", protect, deleteProgram);     
+
 
 export default router;
 

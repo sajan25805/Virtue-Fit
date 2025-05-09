@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import { useAuthStore } from "./store/authStore";
 import NotificationPage from "./pages/NotificationsPage";
 
-
-
 // Layouts
 import AppLayout from "./layouts/AppLayout";
 import MainLayout from "./layouts/MainLayout";
@@ -27,6 +25,7 @@ import SettingsPage from "./pages/Setting";
 import ProgramPage from "./pages/program/ProgramPage";
 import ProgramDetailPage from "./pages/program/ProgramDetailPage";
 import PlannerPage from "./pages/planner/PlannerPage";
+import Help from "./pages/Help";
 // ✅ Protected route wrapper
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -135,6 +134,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <PlannerPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/help",
+        element: (
+          <ProtectedRoute>
+            <Help />
           </ProtectedRoute>
         ),
       },
