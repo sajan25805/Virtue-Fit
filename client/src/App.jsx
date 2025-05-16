@@ -18,6 +18,8 @@ import WorkoutPage from "./pages/workout/WorkoutPage";
 import WorkoutDetailPage from "./pages/workout/WorkoutDetailPage";
 import MealPage from "./pages/mealsSnacks/MealPage";
 import MealDetailPage from "./pages/mealsSnacks/MealDetailPage";
+import MeditationPage from "./pages/meditation/Meditation";
+import MeditationDetailPage from "./pages/meditation/MeditalDetail";
 import SnackPage from "./pages/mealsSnacks/SnackPage";
 import SnackDetailPage from "./pages/mealsSnacks/SnackDetailPage";
 import ErrorPage from "./pages/ErrorPage";
@@ -76,6 +78,22 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <MealDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+        {
+        path: "meditation",
+        element: (
+          <ProtectedRoute>
+            <MeditationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "meditation/:id",
+        element: (
+          <ProtectedRoute>
+            <MeditationDetailPage />
           </ProtectedRoute>
         ),
       },

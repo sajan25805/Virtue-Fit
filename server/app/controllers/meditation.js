@@ -63,7 +63,10 @@ export const getMeditations = async (req, res) => {
 // Get Meditation by ID
 export const getMeditationById = async (req, res) => {
   try {
-    const meditation = await Meditation.findById(req.params.id);
+    const meditation = await Meditation.findById(req.params.id).populate({
+      path: 'trainer',
+      select: 'name email specialization bio profilePicture',
+    });
     
     if (!meditation) {
       return res.status(404).json({ message: 'Meditation not found' });
