@@ -1,85 +1,97 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:8000/api";
 
 export const useProgramStore = create((set) => ({
   programs: [],
   loading: false,
   error: null,
 
+  // 🔄 Fetch all programs
   fetchPrograms: async () => {
-    set({ loading: true, error: null });
+    set({ loading: true });
     try {
-      const res = await fetch("http://localhost:8000/api/programs", {
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (data.success) set({ programs: data.programs });
-      else set({ error: data.message });
+      const res = await axios.get("/programs", { withCredentials: true });
+      if (res.data.success) {
+        set({ programs: res.data.programs });
+      } else {
+        set({ error: res.data.message || "Failed to fetch programs" });
+      }
     } catch (err) {
-      set({ error: err.message });
+      set({ error: err.message || "Error fetching programs" });
     } finally {
       set({ loading: false });
     }
   },
 
-  createProgram: async (program) => {
+  // ➕ Create new program
+  createProgram: async (programData) => {
     set({ loading: true });
     try {
-      const res = await fetch("http://localhost:8000/api/programs", {
-        method: "POST",
+      const res = await axios.post("/programs", programData, {
+        withCredentials: true,
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(program),
       });
-      const data = await res.json();
-      if (data.success) {
-        set((state) => ({ programs: [...state.programs, data.program] }));
-      }
-      return data;
-    } catch (error) {
-      return { success: false, message: error.message };
-    } finally {
-      set({ loading: false });
-    }
-  },
-
-  updateProgram: async (id, program) => {
-    set({ loading: true });
-    try {
-      const res = await fetch(`http://localhost:8000/api/programs/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(program),
-      });
-      const data = await res.json();
-      if (data.success) {
+      if (res.data.success) {
         set((state) => ({
-          programs: state.programs.map((p) => (p._id === id ? data.program : p)),
+          programs: [res.data.program, ...state.programs],
         }));
+        return { success: true, program: res.data.program };
+      } else {
+        return { success: false, message: res.data.message };
       }
-      return data;
-    } catch (error) {
-      return { success: false, message: error.message };
+    } catch (err) {
+      return { success: false, message: err.message };
     } finally {
       set({ loading: false });
     }
   },
 
-  deleteProgram: async (id) => {
+  // ✏️ Update existing program
+  updateProgram: async (id, updatedData) => {
+    set({ loading: true });
     try {
-      const res = await fetch(`http://localhost:8000/api/programs/${id}`, {
-        method: "DELETE",
-        credentials: "include",
+      const res = await axios.patch(`/programs/${id}`, updatedData, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
       });
-      const data = await res.json();
-      if (data.success) {
+      if (res.data.success) {
+        set((state) => ({
+          programs: state.programs.map((p) =>
+            p._id === id ? res.data.program : p
+          ),
+        }));
+        return { success: true, program: res.data.program };
+      } else {
+        return { success: false, message: res.data.message };
+      }
+    } catch (err) {
+      return { success: false, message: err.message };
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  // ❌ Delete program
+  deleteProgram: async (id) => {
+    set({ loading: true });
+    try {
+      const res = await axios.delete(`/programs/${id}`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
         set((state) => ({
           programs: state.programs.filter((p) => p._id !== id),
         }));
+        return { success: true };
+      } else {
+        return { success: false, message: res.data.message };
       }
-      return data;
-    } catch (error) {
-      return { success: false, message: error.message };
+    } catch (err) {
+      return { success: false, message: err.message };
+    } finally {
+      set({ loading: false });
     }
   },
 }));

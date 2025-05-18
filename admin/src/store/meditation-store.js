@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8000/api"; // Update to match your backend
+axios.defaults.baseURL = "http://localhost:8000/api"; 
 
 export const useMeditationStore = create((set) => ({
   meditations: [],
@@ -35,31 +35,6 @@ export const useMeditationStore = create((set) => ({
       });
     }
   },
-
-  // // Add new meditation
-  // addMeditation: async (formData) => {
-  //   set({ loading: true });
-  //   try {
-  //     const response = await axios.post("/meditations", formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-      
-  //     set((state) => ({
-  //       meditations: [...state.meditations, response.data],
-  //       loading: false
-  //     }));
-  //     return response.data;
-  //   } catch (error) {
-  //     set({ 
-  //       error: error.response?.data?.message || "Failed to add meditation",
-  //       loading: false 
-  //     });
-  //     throw error;
-  //   }
-  // },
-
 
   addMeditation: async (formData) => {
     set({ loading: true });

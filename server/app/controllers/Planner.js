@@ -1,61 +1,59 @@
 import { Planner } from "../models/Planner.js";
 import { Program } from "../models/Program.js";
+import { generatePlannerItemsFromProgram } from "../utils/plannerUtils.js";
 
-export const generatePlanner = async (req, res) => {
+
+// ✅ Reschedule planner item (drag & drop support)
+export const reschedulePlannerItem = async (req, res) => {
   try {
-    const { userId } = req;
-    const { programId } = req.params;
+    const { itemId } = req.params;
+    const { newDate } = req.body;
 
-    const program = await Program.findById(programId)
-      .populate("workouts")
-      .populate("meals")
-      .populate("snacks")
-      .populate("meditations");
+    const planner = await Planner.findOneAndUpdate(
+      { "plan._id": itemId },
+      { $set: { "plan.$.date": new Date(newDate) } },
+      { new: true }
+    ).populate("plan.ref");
 
-    if (!program) {
-      return res.status(404).json({ success: false, message: "Program not found" });
-    }
+    if (!planner) return res.status(404).json({ success: false, message: "Planner item not found" });
 
-    const now = new Date();
-    const plannerItems = [];
-    let day = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    const spreadItems = [
-      ...program.workouts.map(i => ({ type: "workout", item: i })),
-      ...program.meals.map(i => ({ type: "meal", item: i })),
-      ...program.snacks.map(i => ({ type: "snack", item: i })),
-      ...program.meditations.flat().map(i => ({ type: "meditation", item: i }))
-    ];
-
-    for (const obj of spreadItems) {
-      plannerItems.push({ date: new Date(day), type: obj.type, item: obj.item._id });
-      day.setDate(day.getDate() + 1);
-    }
-
-    const planner = await Planner.create({
-      user: userId,
-      month: now.getMonth() + 1,
-      year: now.getFullYear(),
-      items: plannerItems
-    });
-
-    res.status(201).json({ success: true, planner });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(200).json({ success: true, message: "Rescheduled successfully", planner });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const getPlanner = async (req, res) => {
   try {
-    const { userId } = req;
-    const now = new Date();
-    const planner = await Planner.findOne({
-      user: userId,
-      month: now.getMonth() + 1,
-      year: now.getFullYear()
-    }).populate("items.item");
+    const plannerItems = await Planner.find({ user: req.userId })
+      .populate({ path: "ref", strictPopulate: false })
+      .sort({ date: 1 });
 
-    res.status(200).json({ success: true, planner });
+    const mapped = plannerItems.map((item) => ({
+      ...item.toObject(),
+      data: item.ref,
+    }));
+
+    res.status(200).json({ success: true, plan: mapped });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export const generatePlanner = async (req, res) => {
+  try {
+    const { programId } = req.params;
+    const { startDate } = req.body;
+
+    const program = await Program.findById(programId);
+    if (!program) return res.status(404).json({ message: "Program not found" });
+
+    await Planner.deleteMany({ user: req.userId, program: programId });
+
+    const items = await generatePlannerItemsFromProgram(req.userId, program, new Date(startDate));
+
+    res.status(200).json({ success: true, planner: items });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -63,25 +61,26 @@ export const getPlanner = async (req, res) => {
 
 export const markPlannerItemComplete = async (req, res) => {
   try {
-    const { userId } = req;
     const { itemId } = req.params;
+    const updated = await Planner.findByIdAndUpdate(itemId, { isCompleted: true }, { new: true });
 
-    const now = new Date();
-    const planner = await Planner.findOne({
-      user: userId,
-      month: now.getMonth() + 1,
-      year: now.getFullYear()
-    });
+    if (!updated) return res.status(404).json({ success: false, message: "Item not found" });
 
-    if (!planner) return res.status(404).json({ success: false, message: "Planner not found" });
+    res.status(200).json({ success: true, item: updated });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
-    const item = planner.items.id(itemId);
-    if (!item) return res.status(404).json({ success: false, message: "Item not found" });
+export const updatePlannerItemDate = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    const { newDate } = req.body;
 
-    item.completed = true;
-    await planner.save();
+    const updated = await Planner.findByIdAndUpdate(itemId, { date: new Date(newDate) }, { new: true });
+    if (!updated) return res.status(404).json({ success: false, message: "Item not found" });
 
-    res.status(200).json({ success: true, message: "Item marked as completed", item });
+    res.status(200).json({ success: true, item: updated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
