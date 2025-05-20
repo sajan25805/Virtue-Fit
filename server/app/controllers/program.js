@@ -57,7 +57,8 @@ export const enrollInProgram = async (req, res) => {
     const userId = req.userId;
     const programId = req.params.programId;
     const { startDate } = req.body;
-
+    
+    
     const exists = await ProgramProgress.findOne({ user: userId, program: programId });
     if (exists) return res.status(400).json({ message: "Already enrolled" });
 
