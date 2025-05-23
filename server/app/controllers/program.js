@@ -1,6 +1,7 @@
 import { Program } from "../models/Program.js";
 import { ProgramProgress } from "../models/ProgramProgress.js";
 import { generatePlannerItemsFromProgram } from "../utils/plannerUtils.js";
+import { Planner } from "../models/Planner.js";
 
 // ✅ Create a program
 export const createProgram = async (req, res) => {

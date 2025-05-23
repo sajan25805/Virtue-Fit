@@ -1,12 +1,8 @@
-
-
-
-
 import { useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { LayoutDashboard, Users, UserCheck, Settings, LogOut, Menu, X, Bell, Search } from "lucide-react"
 
-export function AdminLayout({ children }) {
+export const AdminLayout = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -24,7 +20,7 @@ export function AdminLayout({ children }) {
       icon: Users,
       active: location.pathname === "/admin/users",
     },
-    {
+    { 
       name: "Trainers",
       path: "/admin/trainers",
       icon: UserCheck,

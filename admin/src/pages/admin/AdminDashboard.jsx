@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -6,7 +6,6 @@ import { Users, UserCheck, DollarSign, TrendingUp, Dumbbell, Utensils, Wind, Lay
 import { Card } from "../../components/ui/card"
 import { Button } from "../../components/ui/button"
 import { useAdminStore } from "../../store/admin-store"
-import { AdminLayout } from "../../components/admin/adminLayout"
 import { Chart, ChartContainer, ChartTooltip } from "../../components/ui/chart"
 import {
   Area,
@@ -41,21 +40,33 @@ export default function AdminDashboard() {
 
   const pieColors = ["#00A8FF", "#0096E6", "#0084CC", "#0072B3", "#00609A"]
 
+  const {
+    totalUsers = 0,
+    totalTrainers = 0,
+    newUsersThisMonth = 0,
+    revenue = 0,
+    totalWorkouts = 0,
+    totalMeals = 0,
+    totalMeditations = 0,
+    totalPrograms = 0,
+    userGrowth = [],
+    revenueByMonth = [],
+    usersByPlan = [],
+    contentCreation = [],
+  } = stats || {}
+
   if (isLoading) {
-    return (
-      <AdminLayout>
+    return(
         <div className="flex h-full items-center justify-center">
           <div className="text-center">
             <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[#ECECEE] border-t-[#00A8FF] mx-auto"></div>
             <p className="text-[#0E0E2C]">Loading dashboard data...</p>
           </div>
         </div>
-      </AdminLayout>
-    )
+    )    
   }
 
   return (
-    <AdminLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Admin Dashboard</h1>
@@ -71,7 +82,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="p-6">
             <div className="flex items-center">
@@ -80,7 +90,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Users</p>
-                <p className="text-2xl font-bold">{stats.totalUsers}</p>
+                <p className="text-2xl font-bold">{totalUsers}</p>
               </div>
             </div>
           </Card>
@@ -92,7 +102,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Trainers</p>
-                <p className="text-2xl font-bold">{stats.totalTrainers}</p>
+                <p className="text-2xl font-bold">{totalTrainers}</p>
               </div>
             </div>
           </Card>
@@ -104,7 +114,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">New Users (Month)</p>
-                <p className="text-2xl font-bold">{stats.newUsersThisMonth}</p>
+                <p className="text-2xl font-bold">{newUsersThisMonth}</p>
               </div>
             </div>
           </Card>
@@ -116,13 +126,12 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Revenue</p>
-                <p className="text-2xl font-bold">{formatCurrency(stats.revenue)}</p>
+                <p className="text-2xl font-bold">{formatCurrency(revenue)}</p>
               </div>
             </div>
           </Card>
         </div>
 
-        {/* Content Stats Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="p-6">
             <div className="flex items-center">
@@ -131,7 +140,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Workouts</p>
-                <p className="text-2xl font-bold">{stats.totalWorkouts}</p>
+                <p className="text-2xl font-bold">{totalWorkouts}</p>
               </div>
             </div>
           </Card>
@@ -143,7 +152,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Meals</p>
-                <p className="text-2xl font-bold">{stats.totalMeals}</p>
+                <p className="text-2xl font-bold">{totalMeals}</p>
               </div>
             </div>
           </Card>
@@ -155,7 +164,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Meditations</p>
-                <p className="text-2xl font-bold">{stats.totalMeditations}</p>
+                <p className="text-2xl font-bold">{totalMeditations}</p>
               </div>
             </div>
           </Card>
@@ -167,7 +176,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Programs</p>
-                <p className="text-2xl font-bold">{stats.totalPrograms}</p>
+                <p className="text-2xl font-bold">{totalPrograms}</p>
               </div>
             </div>
           </Card>
@@ -175,13 +184,12 @@ export default function AdminDashboard() {
 
         {/* Charts */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* User Growth Chart */}
           <Card className="p-6">
             <h2 className="mb-4 text-lg font-semibold">User Growth</h2>
             <div className="h-80">
               <ChartContainer>
                 <Chart>
-                  <AreaChart data={stats.userGrowth} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <AreaChart data={userGrowth} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                     <defs>
                       <linearGradient id="userGrowthGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#00A8FF" stopOpacity={0.8} />
@@ -192,33 +200,23 @@ export default function AdminDashboard() {
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip content={<ChartTooltip />} />
-                    <Area
-                      type="monotone"
-                      dataKey="users"
-                      stroke="#00A8FF"
-                      fillOpacity={1}
-                      fill="url(#userGrowthGradient)"
-                    />
+                    <Area type="monotone" dataKey="users" stroke="#00A8FF" fillOpacity={1} fill="url(#userGrowthGradient)" />
                   </AreaChart>
                 </Chart>
               </ChartContainer>
             </div>
           </Card>
 
-          {/* Revenue Chart */}
           <Card className="p-6">
             <h2 className="mb-4 text-lg font-semibold">Revenue</h2>
             <div className="h-80">
               <ChartContainer>
                 <Chart>
-                  <BarChart data={stats.revenueByMonth} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <BarChart data={revenueByMonth} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                     <XAxis dataKey="month" />
                     <YAxis tickFormatter={(value) => `$${value / 1000}k`} />
                     <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip
-                      formatter={(value) => [`${formatCurrency(value)}`, "Revenue"]}
-                      labelFormatter={(label) => `Month: ${label}`}
-                    />
+                    <Tooltip formatter={(value) => [`${formatCurrency(value)}`, "Revenue"]} labelFormatter={(label) => `Month: ${label}`} />
                     <Bar dataKey="revenue" fill="#00A8FF" />
                   </BarChart>
                 </Chart>
@@ -226,25 +224,14 @@ export default function AdminDashboard() {
             </div>
           </Card>
 
-          {/* User by Plan Chart */}
           <Card className="p-6">
             <h2 className="mb-4 text-lg font-semibold">Users by Plan</h2>
             <div className="h-80">
               <ChartContainer>
                 <Chart>
                   <PieChart margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                    <Pie
-                      data={stats.usersByPlan}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      nameKey="name"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {stats.usersByPlan.map((entry, index) => (
+                    <Pie data={usersByPlan} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value" nameKey="name" label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
+                      {(usersByPlan || []).map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                       ))}
                     </Pie>
@@ -256,13 +243,12 @@ export default function AdminDashboard() {
             </div>
           </Card>
 
-          {/* Content Creation Chart */}
           <Card className="p-6">
             <h2 className="mb-4 text-lg font-semibold">Content Creation</h2>
             <div className="h-80">
               <ChartContainer>
                 <Chart>
-                  <BarChart data={stats.contentCreation} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <BarChart data={contentCreation} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
@@ -278,6 +264,5 @@ export default function AdminDashboard() {
           </Card>
         </div>
       </div>
-    </AdminLayout>
   )
 }
