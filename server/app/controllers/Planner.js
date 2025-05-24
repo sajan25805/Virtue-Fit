@@ -41,6 +41,37 @@ export const getPlanner = async (req, res) => {
 };
 
 
+// export const getPlanner = async (req, res) => {
+//   try {
+//     const plannerItems = await Planner.find({ user: req.userId })
+//       .populate({
+//         path: 'data',
+//         model: (doc) => {
+//           // Capitalize the first letter of the type (e.g., 'workout' -> 'Workout')
+//           return doc.type.charAt(0).toUpperCase() + doc.type.slice(1);
+//         },
+//         select: '_id', // Only fetch the ID of the referenced document
+//       })
+//       .sort({ date: 1 });
+
+//     const mapped = plannerItems.map((item) => {
+//       const itemObject = item.toObject();
+//       return {
+//         ...itemObject,
+//         // Include the specific ID based on the type
+//         [`${itemObject.type}Id`]: itemObject.data ? itemObject.data._id : null,
+//         // Optionally, remove the data field if you don't need other details
+//         data: undefined,
+//       };
+//     });
+
+//     res.status(200).json({ success: true, plan: mapped });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+
 export const generatePlanner = async (req, res) => {
   try {
     const { programId } = req.params;
